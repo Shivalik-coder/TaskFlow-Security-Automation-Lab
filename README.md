@@ -30,16 +30,57 @@ This project demonstrates cybersecurity automation concepts and is not a product
 
 ## Current Development Progress
 
+**Project Status:** Work in Progress
+
+TaskFlow is an invented website and fictional security environment developed for educational purposes.
+
 | Component | Status |
 |---|---|
 | Docker and Mockoon environment | Completed |
-| TaskFlow simulated API and website | Working |
+| TaskFlow simulated website and REST API | Working |
 | LAB 00 — Upsert Security Task | Completed and tested |
 | LAB 00 — Deduplication and priority escalation | Completed and tested |
-| LAB 01 — Crypto Asset Discovery | In progress |
-| LAB 01 — Eight asset assessments | Completed and tested |
-| LAB 01 — Seven review-task creation | Verification pending |
-| LAB 02–08 | Planned |
+| LAB 01 — Crypto Asset Discovery | Completed and tested |
+| LAB 01 — Eight cryptographic asset assessments | Passed |
+| LAB 01 — Seven automated security review tasks | Passed |
+| LAB 01 — Duplicate prevention on rerun | Passed |
+| LAB 02 — Certificate Expiry Automation | Next |
+| LAB 03–08 | Planned |
+
+## Completed Security Automation Workflows
+
+### LAB 00 — Upsert Security Task
+
+A reusable n8n workflow that validates security findings, creates or updates tasks, prevents duplicates, verifies stored information, and records simulated notifications.
+
+**Testing:** New task creation, deduplication, priority escalation, and read-back verification completed successfully.
+
+- [View LAB 00 Workflow](workflows/LAB-00-Upsert-Security-Task.json)
+- [View LAB 00 Testing Documentation](docs/LAB-00-Testing.md)
+
+### LAB 01 — Crypto Asset Discovery
+
+An automated cryptographic inventory assessment workflow built with n8n's visual nodes.
+
+**Verified Results:**
+- 8 simulated cryptographic assets retrieved and assessed.
+- 6 public-key-related assets identified for review.
+- 1 unknown-algorithm asset flagged for investigation.
+- 1 AES asset assessed separately.
+- 7 security review tasks generated.
+- No duplicate crypto-review tasks created on repeated execution.
+
+- [View LAB 01 Workflow](workflows/LAB-01-Crypto-Asset-Discovery.json)
+- [View LAB 01 Implementation and Testing](docs/LAB-01-Testing.md)
+
+### Next Milestone
+
+**LAB 02 — Certificate Expiry Automation**
+
+The next workflow will evaluate certificate expiry dates, identify approaching or expired certificates, assign appropriate security priorities, and create or update remediation tasks through LAB 00.
+
+
+*All TaskFlow assets, services, certificates, and security events are fictional and used only for controlled cybersecurity automation simulations.*
 
 ## LAB 00 — Upsert Security Task
 
