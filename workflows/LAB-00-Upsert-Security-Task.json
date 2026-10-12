@@ -1,0 +1,418 @@
+{
+  "name": "Create LAB 00 - Upsert Security Task",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        -288
+      ],
+      "id": "5fd06224-8cec-4e51-a773-abab169f64b8",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/tasks",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dedupeKey_eq",
+              "value": "={{ $json.dedupeKey }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -160,
+        -288
+      ],
+      "id": "1c487e25-66b8-42e5-afe7-b95ed0bfc383",
+      "name": "Find task"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Run Once for Each Item. Upstream node is Find task (full HTTP response).\n// The earlier Code node MUST be named Validate task.\nconst t = $('Validate task').item.json;\nconst rows = $json.body;\nif (!Array.isArray(rows)) throw new Error('Task lookup is not an array');\nif (rows.length > 1) throw new Error('Duplicate dedupeKey; repair lab data');\nconst old = rows[0];\nconst rank = { LOW: 0, MEDIUM: 1, HIGH: 2, CRITICAL: 3 };\nconst body = {\n...t, evidence: {...(old?.evidence || {}), ...(t.evidence || {})},\nstatus: 'open', lastSeenAt: t.observedAt,\ncreatedAt: old ? old.createdAt : t.observedAt\n};\n// A previously closed task reopens only because a detector found it again.\nconst notify = !old || old.status === 'closed' || rank[t.priority] > rank[old.priority];\nreturn { json: { existingId: old ? old.id : null, body, notify } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -288
+      ],
+      "id": "1fa5751d-25ff-43dd-9e45-a4c21c253a6e",
+      "name": "Choose write"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://mock-api:3000/tasks/' + encodeURIComponent($json.body.id) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -16,
+        48
+      ],
+      "id": "4b13d63f-e1a3-4f5b-a962-3fea36fbb9ff",
+      "name": "Verify saved task"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const saved = $json.body;\nconst expected = $('Choose write').item.json.body;\nif (!saved || saved.dedupeKey !== expected.dedupeKey ||\nsaved.priority !== expected.priority || saved.status !== 'open') {\nthrow new Error('Task read-back did not match the requested write');\n}\nreturn {json: saved};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        48
+      ],
+      "id": "7835efb5-368d-49bd-803b-1f39af4a82e4",
+      "name": "Check saved task"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {json: $('Check saved task').item.json};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        64
+      ],
+      "id": "529163a7-3d3a-43bf-b838-7a0d615c4042",
+      "name": "return saved task"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Run Once for Each Item. Input is one proposed task, not an array.\nconst t = $json;\nfor (const k of ['dedupeKey','ruleId','assetId','title','owner','reason']) {\nif (typeof t[k] !== 'string' || !t[k].trim()) {\nthrow new Error('Missing task field: ' + k);\n}\n}\nif (!['LOW','MEDIUM','HIGH','CRITICAL'].includes(t.priority)) {\nthrow new Error('Invalid priority');\n}\nreturn { json: { ...t, observedAt: t.observedAt || new Date().toISOString() } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -288
+      ],
+      "id": "ff4d1d16-85a4-45d3-a5ca-a097ebc9245b",
+      "name": "Validate task"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "760f7be1-8088-444f-a8db-71400326912c",
+              "leftValue": "={{ !!$json.existingId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -464,
+        48
+      ],
+      "id": "b33a50b8-b6a3-4fc8-bec7-0c434146d765",
+      "name": "TaskEsists?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6a8fc350-671e-4423-9a8b-88c3b1a4cdab",
+              "leftValue": "={{ $('Choose write').item.json.notify }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        336,
+        48
+      ],
+      "id": "3616eacd-8caa-4b34-961b-fead299a2029",
+      "name": "Send notification?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://mock-api:3000/notifications",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ ({\ntaskId: $json.id,\npriority: $json.priority,\nowner: $json.owner,\nmessage: $json.title + ': ' + $json.reason,\ncreatedAt: new Date().toISOString()\n}) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        544,
+        -32
+      ],
+      "id": "49965fb4-59ed-45e5-8574-db165e7fa0f8",
+      "name": "POST notification"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/tasks/' + encodeURIComponent($json.existingId) }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -240,
+        -48
+      ],
+      "id": "594bf5d3-b8b3-49ae-b16e-1bbbcea6d61d",
+      "name": "Patch Task"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://mock-api:3000/tasks",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -240,
+        144
+      ],
+      "id": "d1305c34-445f-4272-b144-3dd045b103ea",
+      "name": "Post Task"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Validate task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find task": {
+      "main": [
+        [
+          {
+            "node": "Choose write",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Choose write": {
+      "main": [
+        [
+          {
+            "node": "TaskEsists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify saved task": {
+      "main": [
+        [
+          {
+            "node": "Check saved task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check saved task": {
+      "main": [
+        [
+          {
+            "node": "Send notification?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate task": {
+      "main": [
+        [
+          {
+            "node": "Find task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TaskEsists?": {
+      "main": [
+        [
+          {
+            "node": "Patch Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send notification?": {
+      "main": [
+        [
+          {
+            "node": "POST notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "return saved task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST notification": {
+      "main": [
+        [
+          {
+            "node": "return saved task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Patch Task": {
+      "main": [
+        [
+          {
+            "node": "Verify saved task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Task": {
+      "main": [
+        [
+          {
+            "node": "Verify saved task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
