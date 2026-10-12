@@ -1,0 +1,319 @@
+{
+  "crypto-assets": [
+    {
+      "id": "cert-001",
+      "service": "TaskFlow API",
+      "type": "certificate",
+      "algorithm": "RSA-2048",
+      "owner": "Platform",
+      "source": "mock://certificates/cert-001",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-002",
+      "service": "TaskFlow Web",
+      "type": "certificate",
+      "algorithm": "ECDSA-P256",
+      "owner": "Platform",
+      "source": "mock://certificates/cert-002",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-003",
+      "service": "RDS",
+      "type": "certificate",
+      "algorithm": "RSA-2048",
+      "owner": "Database",
+      "source": "mock://certificates/cert-003",
+      "environment": "lab"
+    },
+    {
+      "id": "ssh-001",
+      "service": "GitHub Actions",
+      "type": "ssh-key",
+      "algorithm": "Ed25519",
+      "owner": "DevOps",
+      "createdAt": "@days:-150",
+      "lastUsedAt": "@days:-45",
+      "rotationPolicyDays": 90,
+      "environment": "lab"
+    },
+    {
+      "id": "jwt-001",
+      "service": "TaskFlow Authentication",
+      "type": "jwt-signing-key",
+      "algorithm": "RS256",
+      "owner": "Identity",
+      "source": "mock://jwt-keys/jwt-001",
+      "environment": "lab"
+    },
+    {
+      "id": "sym-001",
+      "service": "Application Storage",
+      "type": "symmetric-key",
+      "algorithm": "AES-256-GCM",
+      "owner": "Platform",
+      "environment": "lab"
+    },
+    {
+      "id": "unknown-001",
+      "service": "Legacy Connector",
+      "type": "unknown",
+      "algorithm": "unknown",
+      "owner": "Unassigned",
+      "environment": "lab"
+    },
+    {
+      "id": "tls-001",
+      "service": "RDS",
+      "type": "tls-observation",
+      "algorithm": "ECDHE",
+      "owner": "Database",
+      "tlsVersion": "TLSv1.2",
+      "certificateValidated": false,
+      "hostnameValidated": true,
+      "observedAt": "@days:0",
+      "environment": "lab"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "cert-001",
+      "name": "taskflow-api",
+      "service": "TaskFlow API",
+      "owner": "Platform",
+      "algorithm": "RSA-2048",
+      "expiresAt": "@days:6",
+      "fingerprint": "LAB-CERT-OLD-001",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-002",
+      "name": "taskflow-web",
+      "service": "TaskFlow Web",
+      "owner": "Platform",
+      "algorithm": "ECDSA-P256",
+      "expiresAt": "@days:25",
+      "fingerprint": "LAB-CERT-002",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-003",
+      "name": "rds-lab",
+      "service": "RDS",
+      "owner": "Database",
+      "algorithm": "RSA-2048",
+      "expiresAt": "@days:10",
+      "fingerprint": "LAB-CERT-003",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-004",
+      "name": "healthy-lab",
+      "service": "Healthy Demo",
+      "owner": "Platform",
+      "algorithm": "ECDSA-P256",
+      "expiresAt": "@days:90",
+      "fingerprint": "LAB-CERT-004",
+      "environment": "lab"
+    },
+    {
+      "id": "cert-005",
+      "name": "invalid-date-lab",
+      "service": "Legacy Demo",
+      "owner": "Platform",
+      "algorithm": "RSA-2048",
+      "expiresAt": "not-a-date",
+      "fingerprint": "LAB-CERT-005",
+      "environment": "lab"
+    }
+  ],
+  "jwt-keys": [
+    {
+      "id": "jwt-001",
+      "keyId": "jwt-001",
+      "service": "TaskFlow Authentication",
+      "owner": "Identity",
+      "algorithm": "RS256",
+      "createdAt": "@days:-100",
+      "rotationPolicyDays": 90,
+      "state": "active",
+      "useForSigning": true,
+      "useForVerification": true,
+      "published": true,
+      "environment": "lab"
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-api",
+      "service": "TaskFlow API",
+      "scope": "TLS key establishment",
+      "crypto": [
+        "ECDHE"
+      ],
+      "vendorControlled": false,
+      "vendorId": null,
+      "evidence": {
+        "inventory": "LAB-INV-001",
+        "roadmap": "LAB-PLAN-001",
+        "testEnvironment": "LAB-ENV-001",
+        "hybridTest": null,
+        "production": null
+      },
+      "blockers": [],
+      "simulated": true
+    },
+    {
+      "id": "svc-auth0",
+      "service": "Auth0",
+      "scope": "JWT signing integration",
+      "crypto": [
+        "RS256",
+        "ES256"
+      ],
+      "vendorControlled": true,
+      "vendorId": "auth0",
+      "evidence": {
+        "inventory": "LAB-INV-002",
+        "roadmap": "LAB-PLAN-002",
+        "testEnvironment": null,
+        "hybridTest": null,
+        "production": null
+      },
+      "blockers": [
+        "Awaiting mock vendor test integration"
+      ],
+      "simulated": true
+    },
+    {
+      "id": "svc-stripe",
+      "service": "Stripe",
+      "scope": "Outbound API TLS dependency",
+      "crypto": [
+        "ECDHE"
+      ],
+      "vendorControlled": true,
+      "vendorId": "stripe",
+      "evidence": {
+        "inventory": "LAB-INV-003",
+        "roadmap": null,
+        "testEnvironment": null,
+        "hybridTest": null,
+        "production": null
+      },
+      "blockers": [],
+      "simulated": true
+    }
+  ],
+  "vendors": [
+    {
+      "id": "auth0",
+      "vendor": "Auth0",
+      "pqcStatus": "testing",
+      "lastUpdated": "@days:-18",
+      "lastReviewedAt": "@days:-18",
+      "nextReview": "@days:45",
+      "lastObservedStatus": null,
+      "owner": "Identity",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-AUTH0"
+    },
+    {
+      "id": "aws",
+      "vendor": "AWS",
+      "pqcStatus": "ready",
+      "lastUpdated": "@days:-5",
+      "lastReviewedAt": "@days:-5",
+      "nextReview": "@days:25",
+      "lastObservedStatus": null,
+      "owner": "Platform",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-AWS"
+    },
+    {
+      "id": "stripe",
+      "vendor": "Stripe",
+      "pqcStatus": "unknown",
+      "lastUpdated": "@days:-45",
+      "lastReviewedAt": "@days:-45",
+      "nextReview": "@days:-1",
+      "lastObservedStatus": null,
+      "owner": "Payments",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-STRIPE"
+    },
+    {
+      "id": "sendgrid",
+      "vendor": "SendGrid",
+      "pqcStatus": "unknown",
+      "lastUpdated": "@days:-40",
+      "lastReviewedAt": "@days:-40",
+      "nextReview": "@days:-5",
+      "lastObservedStatus": null,
+      "owner": "Messaging",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-SENDGRID"
+    },
+    {
+      "id": "intercom",
+      "vendor": "Intercom",
+      "pqcStatus": "blocked",
+      "lastUpdated": "@days:-2",
+      "lastReviewedAt": "@days:-2",
+      "nextReview": "@days:10",
+      "lastObservedStatus": null,
+      "owner": "Support Systems",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-INTERCOM"
+    },
+    {
+      "id": "sentry",
+      "vendor": "Sentry",
+      "pqcStatus": "testing",
+      "lastUpdated": "@days:-3",
+      "lastReviewedAt": "@days:-3",
+      "nextReview": "@days:27",
+      "lastObservedStatus": null,
+      "owner": "DevOps",
+      "sourceType": "simulation",
+      "evidenceRef": "LAB-VENDOR-SENTRY"
+    }
+  ],
+  "secrets": [
+    {
+      "id": "secret-001",
+      "name": "stripe-api-key",
+      "owner": "Payments",
+      "createdAt": "@days:-150",
+      "lastRotated": "@days:-100",
+      "rotationPolicyDays": 90,
+      "currentVersion": "v1",
+      "candidateVersion": null,
+      "consumerVersion": "v1",
+      "previousVersion": null,
+      "oldVersionEnabled": true,
+      "consumerHealth": "pass",
+      "environment": "lab"
+    },
+    {
+      "id": "secret-002",
+      "name": "sendgrid-api-key",
+      "owner": "Messaging",
+      "createdAt": "@days:-150",
+      "lastRotated": "@days:-10",
+      "rotationPolicyDays": 90,
+      "currentVersion": "v1",
+      "candidateVersion": null,
+      "consumerVersion": "v1",
+      "previousVersion": null,
+      "oldVersionEnabled": true,
+      "consumerHealth": "pass",
+      "environment": "lab"
+    }
+  ],
+  "tasks": [],
+  "rotation-requests": [],
+  "notifications": [],
+  "ci-checks": []
+}

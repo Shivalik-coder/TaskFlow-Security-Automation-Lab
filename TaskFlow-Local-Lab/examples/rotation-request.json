@@ -1,0 +1,10 @@
+{
+  "id": "rotate-jwt-001",
+  "kind": "jwt",
+  "assetId": "jwt-001",
+  "newKeyId": "jwt-001-next",
+  "status": "pending-approval",
+  "approvedBy": null,
+  "approvedAt": null,
+  "simulated": true
+}

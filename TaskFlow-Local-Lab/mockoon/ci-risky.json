@@ -1,0 +1,16 @@
+{
+  "eventId": "LAB-CI-001",
+  "repository": "taskflow",
+  "pullRequest": 241,
+  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "files": [
+    {
+      "path": "src/auth/jwt.js",
+      "content": "const signingAlgorithm = 'RS256';"
+    },
+    {
+      "path": "src/security/crypto.js",
+      "content": "const transportGroup = 'ECDHE';"
+    }
+  ]
+}

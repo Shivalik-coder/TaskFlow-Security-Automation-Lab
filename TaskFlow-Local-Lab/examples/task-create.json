@@ -1,0 +1,11 @@
+{
+  "dedupeKey": "smoke:manual-001",
+  "ruleId": "smoke",
+  "assetId": "cert-001",
+  "title": "Practice read/write/read-back",
+  "priority": "HIGH",
+  "owner": "Lab Operator",
+  "reason": "Disposable connectivity test",
+  "status": "open",
+  "simulated": true
+}

@@ -1,0 +1,145 @@
+TASKFLOW LOCAL LAB - VALIDATION RECORD
+Date: 9 October 2026
+
+These are offline authoring checks, not a live Docker deployment certification.
+
+Code and behavioral checks: 53 / 53 passed.
+  PASS - Compile 00-choose-task-write.js
+  PASS - Compile 00-split-collection.js
+  PASS - Compile 00-validate-task.js
+  PASS - Compile 01-classify-assets.js
+  PASS - Compile 02-certificate-findings.js
+  PASS - Compile 03-jwt-findings.js
+  PASS - Compile 04-readiness.js
+  PASS - Compile 05-vendor-review.js
+  PASS - Compile 06-secret-findings.js
+  PASS - Compile 07-scan-ci.js
+  PASS - Compile 07-validate-ci.js
+  PASS - Compile 08-incident-tasks.js
+  PASS - Compile 08-validate-incident.js
+  PASS - Split collection maps all records
+  PASS - Split rejects wrong response shape
+  PASS - Task required fields validated
+  PASS - Task rejects missing owner
+  PASS - New task emits create and notification
+  PASS - Existing unchanged task does not notify
+  PASS - Priority escalation notifies
+  PASS - Closed finding reopens
+  PASS - Duplicate existing rows stop write
+  PASS - Asset baseline seven findings
+  PASS - AES never marked zero risk
+  PASS - Unknown algorithm produces investigation
+  PASS - Certificate baseline four findings
+  PASS - Certificate boundary -1 days
+  PASS - Certificate boundary 0 days
+  PASS - Certificate boundary 6.9 days
+  PASS - Certificate boundary 7 days
+  PASS - Certificate boundary 14 days
+  PASS - Certificate boundary 30 days
+  PASS - Impossible certificate date rejected
+  PASS - JWT baseline one overdue signing key
+  PASS - JWT retired signer ignored
+  PASS - JWT future creation flagged
+  PASS - Readiness baseline 3,2,1 and three tasks
+  PASS - Readiness cannot skip inventory
+  PASS - Simulated readiness capped at four
+  PASS - Vendor baseline three findings
+  PASS - Vendor status normalization
+  PASS - Vendor change generates review
+  PASS - Secret baseline one overdue record
+  PASS - Secret malformed date creates data-quality task
+  PASS - CI accepts supplied risky payload
+  PASS - CI rejects empty files
+  PASS - CI rejects missing contents
+  PASS - Risky CI returns two scoped findings
+  PASS - Clean CI returns one no-findings summary
+  PASS - Incident accepts simulation
+  PASS - Incident rejects non-simulation
+  PASS - Incident deduplicates asset IDs
+  PASS - Unknown incident asset creates scope task
+
+Website checks with mocked fetch responses: 14 / 14 passed.
+  PASS - Empty dashboard initializes without a JavaScript failure
+  PASS - Reset creates all ten collections with the expected counts
+  PASS - Selecting and loading a row fills the editor
+  PASS - Expiry preset alone does not write to the API
+  PASS - Save performs PATCH followed by read-back
+  PASS - The saved value survives refresh and reload
+  PASS - Record ID changes are blocked
+  PASS - Malformed JSON does not mutate the stored row
+  PASS - Untrusted record text is displayed as text, not HTML
+  PASS - Snapshot export contains all ten named collections
+  PASS - Snapshot restore preserves the exported edited data
+  PASS - Event selector loads the corresponding local payload
+  PASS - Event sender rejects nonlocal targets
+  PASS - Event sender requires the practice header value
+
+File/configuration structural checks: 44 / 44 passed.
+  PASS - JSON examples/task-patch.json
+  PASS - JSON examples/services.json
+  PASS - JSON examples/crypto-assets.json
+  PASS - JSON examples/secret-rotation-request.json
+  PASS - JSON examples/ci-checks.json
+  PASS - JSON examples/notifications.json
+  PASS - JSON examples/rotation-request.json
+  PASS - JSON examples/rotation-requests.json
+  PASS - JSON examples/vendors.json
+  PASS - JSON examples/tasks.json
+  PASS - JSON examples/secrets.json
+  PASS - JSON examples/jwt-keys.json
+  PASS - JSON examples/certificates.json
+  PASS - JSON examples/task-create.json
+  PASS - JSON events/ci-risky.json
+  PASS - JSON events/incident.json
+  PASS - JSON events/ci-clean.json
+  PASS - JSON mockoon/ci-risky.json
+  PASS - JSON mockoon/incident.json
+  PASS - JSON mockoon/ci-clean.json
+  PASS - JSON mockoon/taskflow.mockoon.json
+  PASS - JSON mockoon/seed-data.json
+  PASS - JSON practice/certificate.json
+  PASS - n8n loopback publication
+  PASS - Mockoon loopback publication
+  PASS - Separate named n8n volume
+  PASS - Ten CRUD routes
+  PASS - Static file exists 
+  PASS - Static file exists seed-data
+  PASS - CRUD bucket link crypto-assets
+  PASS - CRUD bucket link certificates
+  PASS - CRUD bucket link jwt-keys
+  PASS - CRUD bucket link services
+  PASS - CRUD bucket link vendors
+  PASS - CRUD bucket link secrets
+  PASS - CRUD bucket link tasks
+  PASS - CRUD bucket link rotation-requests
+  PASS - CRUD bucket link notifications
+  PASS - CRUD bucket link ci-checks
+  PASS - Static file exists styles.css
+  PASS - Static file exists app.js
+  PASS - Static file exists events/ci-risky
+  PASS - Static file exists events/ci-clean
+  PASS - Static file exists events/incident
+
+Test environment and limits:
+- JavaScript Code-node bodies executed in Node.js 22 with simulated n8n
+  input/reference objects and a fixed test clock, not inside n8n itself.
+- The supplied dashboard ran in Chromium with an offline mocked fetch
+  interface. Reads/writes/resets and snapshots used that test interface.
+  Safari, actual Mockoon HTTP behavior, real webhook CORS/preflight, and
+  the complete n8n workflow graphs were not executed here.
+- JSON parsed and linked file/bucket paths checked. YAML parsed and
+  local port publications checked; Docker Compose itself was not run.
+- Docker, the n8n image and the Mockoon CLI image were not available for
+  an end-to-end runtime test in this authoring environment.
+- No accounts, applications, subscriptions or production systems were changed.
+
+Required live checks on your Mac:
+1. Docker engine and Compose respond; n8n publishes 127.0.0.1:5678.
+2. Local n8n opens and its saved workflow survives an n8n restart.
+3. Mockoon Desktop practice CRUD works and restart resets its live state.
+4. The main CLI environment starts and all ten CRUD collections work.
+5. Website initialization, edit/save/read-back and snapshot restore work.
+6. All workflow baseline counts and failure/approval branches pass.
+7. Webhooks authenticate and clean events still return responses.
+8. An isolated n8n backup/restore drill succeeds before important use.
+9. Record actual image versions, test dates and acceptance outcomes.

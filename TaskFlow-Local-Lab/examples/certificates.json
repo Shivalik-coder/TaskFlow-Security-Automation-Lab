@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cert-001",
+    "name": "taskflow-api",
+    "service": "TaskFlow API",
+    "owner": "Platform",
+    "algorithm": "RSA-2048",
+    "expiresAt": "@days:6",
+    "fingerprint": "LAB-CERT-OLD-001",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-002",
+    "name": "taskflow-web",
+    "service": "TaskFlow Web",
+    "owner": "Platform",
+    "algorithm": "ECDSA-P256",
+    "expiresAt": "@days:25",
+    "fingerprint": "LAB-CERT-002",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-003",
+    "name": "rds-lab",
+    "service": "RDS",
+    "owner": "Database",
+    "algorithm": "RSA-2048",
+    "expiresAt": "@days:10",
+    "fingerprint": "LAB-CERT-003",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-004",
+    "name": "healthy-lab",
+    "service": "Healthy Demo",
+    "owner": "Platform",
+    "algorithm": "ECDSA-P256",
+    "expiresAt": "@days:90",
+    "fingerprint": "LAB-CERT-004",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-005",
+    "name": "invalid-date-lab",
+    "service": "Legacy Demo",
+    "owner": "Platform",
+    "algorithm": "RSA-2048",
+    "expiresAt": "not-a-date",
+    "fingerprint": "LAB-CERT-005",
+    "environment": "lab"
+  }
+]

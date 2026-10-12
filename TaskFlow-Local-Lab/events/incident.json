@@ -1,0 +1,14 @@
+{
+  "eventId": "LAB-INC-001",
+  "simulated": true,
+  "advisoryId": "LAB-ONLY-001",
+  "severity": "critical",
+  "algorithm": "RSA-2048",
+  "affectedServices": [
+    "TaskFlow API"
+  ],
+  "affectedAssetIds": [
+    "cert-001"
+  ],
+  "reason": "Simulated urgent certificate-replacement exercise. This is not a claim of a real RSA vulnerability."
+}

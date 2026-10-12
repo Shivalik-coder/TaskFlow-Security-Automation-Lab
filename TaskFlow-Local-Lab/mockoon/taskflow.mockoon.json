@@ -1,0 +1,852 @@
+{
+  "uuid": "f8eabd6e-e56a-4198-abc0-4644ea936941",
+  "lastMigration": 29,
+  "name": "TaskFlow Local Lab",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "ee301f98-4fc1-4615-86ac-519a93ba126b",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "",
+      "responses": [
+        {
+          "uuid": "4e0aa92b-3d5e-4438-81de-dc5a16821a75",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            }
+          ],
+          "filePath": "./index.html",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "3fa2fe39-b3b1-43fe-b595-cdd7ef0eb641",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "seed-data",
+      "responses": [
+        {
+          "uuid": "d4911760-ee02-43ac-971e-78e072645f70",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "./seed-data.json",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4d0237a2-ba43-47fc-bc18-924d5bba1d4e",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "health",
+      "responses": [
+        {
+          "uuid": "c3c54cfb-abb1-44f2-9bf1-3da94d10fa13",
+          "body": "{\"ok\": true, \"environment\": \"taskflow-local\", \"simulated\": true}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c697fd24-bb4b-4e1d-9571-c0b344482737",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "crypto-assets",
+      "responses": [
+        {
+          "uuid": "a760970c-8f2d-4ce8-ac8e-ac896bd5d762",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "12f2b609-decb-44de-b08f-15e7c24bf75b",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "769dbaab-47fb-412a-a011-9361a2e233af",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "certificates",
+      "responses": [
+        {
+          "uuid": "f831a1e9-d52f-4400-9365-0969ada48ad5",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "f14385b4-4ad1-4fd7-bcfc-f4c785193825",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "f90fef9b-a4b4-463d-905d-0a9280ed1066",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "jwt-keys",
+      "responses": [
+        {
+          "uuid": "0c4af815-6c1d-4260-a245-d25005f5710c",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "da0b512c-1d39-4a1f-a64a-287211321ba3",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "1a7df998-31ae-42a5-b067-7ded6bdeb84f",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "services",
+      "responses": [
+        {
+          "uuid": "0c71521d-76ef-4a9a-af29-723100b45bd5",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "344f8b18-0fbc-4a74-9633-de1df8bd38df",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4d3528ca-3f2e-4bc4-b818-835b29bfc621",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "vendors",
+      "responses": [
+        {
+          "uuid": "30d48c4e-666a-4399-b512-5f0e7343f8bb",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "3bfab384-eb35-4fe3-a65b-68fe39b05165",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "2e57f1fe-13ac-44e2-b5b2-7be2e8d7ebc6",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "secrets",
+      "responses": [
+        {
+          "uuid": "29ed444d-e09d-46ce-8644-bb930e8b68fd",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "bb02ebad-0d36-4761-9c04-6be3467133fd",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "053ed4b2-b5f9-4bf0-905c-419e796431d2",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "tasks",
+      "responses": [
+        {
+          "uuid": "e759b7b5-949f-46e1-8309-6b296655c00f",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "178c6fc6-6277-4d0d-b41d-cbd48d410690",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "2ec02829-21b8-4a90-af60-8864db776ef6",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "rotation-requests",
+      "responses": [
+        {
+          "uuid": "506e905a-dc5f-435f-b706-0d9a45ab3cda",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "bf2569b2-e26f-4e84-8640-cec6e9679e89",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "33a57dfe-cb5a-49ee-80f3-398ed5b12da5",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "notifications",
+      "responses": [
+        {
+          "uuid": "861fa264-d8c8-4393-a113-f888c2e22d61",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "e6618613-8a59-4c13-8a98-689f24e48699",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "fd0717e9-c399-4239-b6dd-b8dcd3f45c6a",
+      "documentation": "TaskFlow local training only",
+      "method": "",
+      "endpoint": "ci-checks",
+      "responses": [
+        {
+          "uuid": "7a3b2d79-0b03-4ab6-96b9-1ba89315eb16",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "72efb7d9-bd9f-49c6-9e4e-500d6d867b37",
+          "bodyType": "DATABUCKET",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "crud",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "02209221-b9b3-4bb8-b95f-1af24810f579",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "simulate-error",
+      "responses": [
+        {
+          "uuid": "bce2b6cc-e13b-4c3a-b7ca-1170cd36ac30",
+          "body": "{\"error\": \"Intentional lab failure\"}",
+          "latency": 0,
+          "statusCode": 503,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "b1c24222-f125-4ee5-bae7-4d60149d9294",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "styles.css",
+      "responses": [
+        {
+          "uuid": "dfa56132-d01d-41d5-997c-cba3bff2693d",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/css; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "filePath": "./styles.css",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "609f75c9-cc2a-42e0-87cd-428f68dcde8d",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "app.js",
+      "responses": [
+        {
+          "uuid": "4b44e8c7-435b-47fd-bc4f-4a412a795bae",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "filePath": "./app.js",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "038eca43-5538-4efc-a1ce-4524740d3f01",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "events/ci-risky",
+      "responses": [
+        {
+          "uuid": "9a41b18c-03be-4d0c-b77e-648a63998a27",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "filePath": "./ci-risky.json",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "4de42c04-b184-4e8a-b5b4-5452efbfe919",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "events/ci-clean",
+      "responses": [
+        {
+          "uuid": "5f018fb1-8cca-4437-8b11-8a1bece4d53e",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "filePath": "./ci-clean.json",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "c78a0909-08b5-49d9-80fb-16055cccf096",
+      "documentation": "TaskFlow local training only",
+      "method": "get",
+      "endpoint": "events/incident",
+      "responses": [
+        {
+          "uuid": "4c1df2d8-5010-47cf-a03a-89b1cc6940ef",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Lab response",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ],
+          "filePath": "./incident.json",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": true,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "enabled": true,
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": false,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "proxyRemovePrefix": false,
+  "hostname": "127.0.0.1",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [
+    {
+      "uuid": "12f2b609-decb-44de-b08f-15e7c24bf75b",
+      "id": "crypto-assets",
+      "name": "crypto-assets",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "f14385b4-4ad1-4fd7-bcfc-f4c785193825",
+      "id": "certificates",
+      "name": "certificates",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "da0b512c-1d39-4a1f-a64a-287211321ba3",
+      "id": "jwt-keys",
+      "name": "jwt-keys",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "344f8b18-0fbc-4a74-9633-de1df8bd38df",
+      "id": "services",
+      "name": "services",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "3bfab384-eb35-4fe3-a65b-68fe39b05165",
+      "id": "vendors",
+      "name": "vendors",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "bb02ebad-0d36-4761-9c04-6be3467133fd",
+      "id": "secrets",
+      "name": "secrets",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "178c6fc6-6277-4d0d-b41d-cbd48d410690",
+      "id": "tasks",
+      "name": "tasks",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "bf2569b2-e26f-4e84-8640-cec6e9679e89",
+      "id": "rotation-requests",
+      "name": "rotation-requests",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "e6618613-8a59-4c13-8a98-689f24e48699",
+      "id": "notifications",
+      "name": "notifications",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    },
+    {
+      "uuid": "72efb7d9-bd9f-49c6-9e4e-500d6d867b37",
+      "id": "ci-checks",
+      "name": "ci-checks",
+      "documentation": "Synthetic training records; reset on restart.",
+      "value": "[]"
+    }
+  ],
+  "folders": [],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ee301f98-4fc1-4615-86ac-519a93ba126b"
+    },
+    {
+      "type": "route",
+      "uuid": "3fa2fe39-b3b1-43fe-b595-cdd7ef0eb641"
+    },
+    {
+      "type": "route",
+      "uuid": "4d0237a2-ba43-47fc-bc18-924d5bba1d4e"
+    },
+    {
+      "type": "route",
+      "uuid": "c697fd24-bb4b-4e1d-9571-c0b344482737"
+    },
+    {
+      "type": "route",
+      "uuid": "769dbaab-47fb-412a-a011-9361a2e233af"
+    },
+    {
+      "type": "route",
+      "uuid": "f90fef9b-a4b4-463d-905d-0a9280ed1066"
+    },
+    {
+      "type": "route",
+      "uuid": "1a7df998-31ae-42a5-b067-7ded6bdeb84f"
+    },
+    {
+      "type": "route",
+      "uuid": "4d3528ca-3f2e-4bc4-b818-835b29bfc621"
+    },
+    {
+      "type": "route",
+      "uuid": "2e57f1fe-13ac-44e2-b5b2-7be2e8d7ebc6"
+    },
+    {
+      "type": "route",
+      "uuid": "053ed4b2-b5f9-4bf0-905c-419e796431d2"
+    },
+    {
+      "type": "route",
+      "uuid": "2ec02829-21b8-4a90-af60-8864db776ef6"
+    },
+    {
+      "type": "route",
+      "uuid": "33a57dfe-cb5a-49ee-80f3-398ed5b12da5"
+    },
+    {
+      "type": "route",
+      "uuid": "fd0717e9-c399-4239-b6dd-b8dcd3f45c6a"
+    },
+    {
+      "type": "route",
+      "uuid": "02209221-b9b3-4bb8-b95f-1af24810f579"
+    },
+    {
+      "type": "route",
+      "uuid": "b1c24222-f125-4ee5-bae7-4d60149d9294"
+    },
+    {
+      "type": "route",
+      "uuid": "609f75c9-cc2a-42e0-87cd-428f68dcde8d"
+    },
+    {
+      "type": "route",
+      "uuid": "038eca43-5538-4efc-a1ce-4524740d3f01"
+    },
+    {
+      "type": "route",
+      "uuid": "4de42c04-b184-4e8a-b5b4-5452efbfe919"
+    },
+    {
+      "type": "route",
+      "uuid": "c78a0909-08b5-49d9-80fb-16055cccf096"
+    }
+  ],
+  "callbacks": []
+}

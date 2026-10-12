@@ -1,0 +1,34 @@
+name: taskflow-local
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      TZ: Asia/Manila
+      GENERIC_TIMEZONE: Asia/Manila
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_RUNNERS_MODE: internal
+      N8N_SECURE_COOKIE: "false"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+    volumes:
+      - n8n_data:/home/node/.n8n
+  mock-api:
+    image: mockoon/cli:latest
+    restart: unless-stopped
+    command:
+      - --data
+      - /data/taskflow.mockoon.json
+      - --port
+      - "3000"
+      - --hostname
+      - 0.0.0.0
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./mockoon:/data:ro
+volumes:
+  n8n_data:
+    name: taskflow_local_n8n_data

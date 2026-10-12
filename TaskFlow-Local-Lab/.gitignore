@@ -1,0 +1,4 @@
+backups/*
+!backups/KEEP-PRIVATE.txt
+.DS_Store
+.env

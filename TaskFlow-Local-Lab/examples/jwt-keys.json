@@ -1,0 +1,16 @@
+[
+  {
+    "id": "jwt-001",
+    "keyId": "jwt-001",
+    "service": "TaskFlow Authentication",
+    "owner": "Identity",
+    "algorithm": "RS256",
+    "createdAt": "@days:-100",
+    "rotationPolicyDays": 90,
+    "state": "active",
+    "useForSigning": true,
+    "useForVerification": true,
+    "published": true,
+    "environment": "lab"
+  }
+]

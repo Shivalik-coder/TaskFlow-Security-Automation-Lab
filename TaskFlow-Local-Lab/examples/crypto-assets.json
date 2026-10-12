@@ -1,0 +1,77 @@
+[
+  {
+    "id": "cert-001",
+    "service": "TaskFlow API",
+    "type": "certificate",
+    "algorithm": "RSA-2048",
+    "owner": "Platform",
+    "source": "mock://certificates/cert-001",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-002",
+    "service": "TaskFlow Web",
+    "type": "certificate",
+    "algorithm": "ECDSA-P256",
+    "owner": "Platform",
+    "source": "mock://certificates/cert-002",
+    "environment": "lab"
+  },
+  {
+    "id": "cert-003",
+    "service": "RDS",
+    "type": "certificate",
+    "algorithm": "RSA-2048",
+    "owner": "Database",
+    "source": "mock://certificates/cert-003",
+    "environment": "lab"
+  },
+  {
+    "id": "ssh-001",
+    "service": "GitHub Actions",
+    "type": "ssh-key",
+    "algorithm": "Ed25519",
+    "owner": "DevOps",
+    "createdAt": "@days:-150",
+    "lastUsedAt": "@days:-45",
+    "rotationPolicyDays": 90,
+    "environment": "lab"
+  },
+  {
+    "id": "jwt-001",
+    "service": "TaskFlow Authentication",
+    "type": "jwt-signing-key",
+    "algorithm": "RS256",
+    "owner": "Identity",
+    "source": "mock://jwt-keys/jwt-001",
+    "environment": "lab"
+  },
+  {
+    "id": "sym-001",
+    "service": "Application Storage",
+    "type": "symmetric-key",
+    "algorithm": "AES-256-GCM",
+    "owner": "Platform",
+    "environment": "lab"
+  },
+  {
+    "id": "unknown-001",
+    "service": "Legacy Connector",
+    "type": "unknown",
+    "algorithm": "unknown",
+    "owner": "Unassigned",
+    "environment": "lab"
+  },
+  {
+    "id": "tls-001",
+    "service": "RDS",
+    "type": "tls-observation",
+    "algorithm": "ECDHE",
+    "owner": "Database",
+    "tlsVersion": "TLSv1.2",
+    "certificateValidated": false,
+    "hostnameValidated": true,
+    "observedAt": "@days:0",
+    "environment": "lab"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "svc-api",
+    "service": "TaskFlow API",
+    "scope": "TLS key establishment",
+    "crypto": [
+      "ECDHE"
+    ],
+    "vendorControlled": false,
+    "vendorId": null,
+    "evidence": {
+      "inventory": "LAB-INV-001",
+      "roadmap": "LAB-PLAN-001",
+      "testEnvironment": "LAB-ENV-001",
+      "hybridTest": null,
+      "production": null
+    },
+    "blockers": [],
+    "simulated": true
+  },
+  {
+    "id": "svc-auth0",
+    "service": "Auth0",
+    "scope": "JWT signing integration",
+    "crypto": [
+      "RS256",
+      "ES256"
+    ],
+    "vendorControlled": true,
+    "vendorId": "auth0",
+    "evidence": {
+      "inventory": "LAB-INV-002",
+      "roadmap": "LAB-PLAN-002",
+      "testEnvironment": null,
+      "hybridTest": null,
+      "production": null
+    },
+    "blockers": [
+      "Awaiting mock vendor test integration"
+    ],
+    "simulated": true
+  },
+  {
+    "id": "svc-stripe",
+    "service": "Stripe",
+    "scope": "Outbound API TLS dependency",
+    "crypto": [
+      "ECDHE"
+    ],
+    "vendorControlled": true,
+    "vendorId": "stripe",
+    "evidence": {
+      "inventory": "LAB-INV-003",
+      "roadmap": null,
+      "testEnvironment": null,
+      "hybridTest": null,
+      "production": null
+    },
+    "blockers": [],
+    "simulated": true
+  }
+]

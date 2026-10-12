@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaskFlow Local Lab</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header><small>LOCAL PRACTICE ONLY</small><h1>TaskFlow Security Lab</h1>
+<p>Mockoon data, n8n workflows, and visible evidence of every simulated change.</p></header>
+<p class="notice"><strong>Invented data only.</strong> No real credentials, certificates or vendor accounts belong here. Mockoon changes reset when its server restarts. Export a snapshot before stopping it.</p>
+<nav><a href="#overview">Overview</a><a href="#editor">Record editor</a><a href="#events">Test events</a><a href="#backup">Snapshots</a></nav>
+<section id="overview" class="panel"><h2>1. Initialize and inspect</h2>
+<div class="toolbar"><button id="reset">Initialize / reset demo</button><button id="refresh">Refresh all</button></div>
+<p id="message" role="status" aria-live="polite">Loading...</p><div id="cards" class="cards"></div>
+<h3>Security tasks</h3><div class="scroll"><table><thead><tr><th>Priority</th><th>Title</th><th>Owner</th><th>Status</th></tr></thead><tbody id="tasks"></tbody></table></div>
+<h3>PQC readiness by scope</h3><div class="scroll"><table><thead><tr><th>Service</th><th>Scope</th><th>Stage</th><th>Status</th></tr></thead><tbody id="services"></tbody></table></div></section>
+<section id="editor" class="panel"><h2>2. Inspect or edit a record</h2>
+<p>Choose a collection, then a record. Load it, edit its JSON, and save. Only fake records are changed.</p>
+<div class="toolbar"><label>Collection <select id="collection"></select></label><label>Record ID <select id="recordId"></select></label><button id="load">Load selected record</button></div>
+<details><summary>Show full collection JSON</summary><pre id="records"></pre></details>
+<label for="editJson">Selected record JSON</label><textarea id="editJson" rows="12" spellcheck="false"></textarea>
+<div class="toolbar"><button id="save">Save edited record</button><button data-days="6">Set expiry: 6 days</button><button data-days="25">Set expiry: 25 days</button><button data-days="90">Set expiry: 90 days</button></div>
+<p class="muted">Expiry buttons change the editor only. Click Save edited record to send the change to Mockoon. Keep the id unchanged. Approval fields are simulations, not secure access control.</p></section>
+<section id="events" class="panel"><h2>3. Send a mock event to n8n</h2>
+<p>Build the receiving workflow first. For a Test URL, click Listen for test event in n8n before sending.</p>
+<label>Sample event <select id="eventType"><option value="ci-risky">CI: crypto patterns</option><option value="ci-clean">CI: no configured pattern</option><option value="incident">Incident: certificate drill</option></select></label>
+<label>n8n webhook URL <input id="webhookUrl" placeholder="http://localhost:5678/webhook-test/tf-ci-crypto"></label>
+<label>Practice X-Lab-Token <input id="labToken" type="password" autocomplete="off" placeholder="Your practice-only header value"></label>
+<label>Event JSON <textarea id="eventJson" rows="10" spellcheck="false"></textarea></label>
+<button id="sendEvent">Send mock event</button><pre id="eventResult">No event sent.</pre>
+<p class="muted">The token is kept only in this page, not saved in a file or browser storage. A browser failure may still mean the server received the request: inspect n8n Executions before retrying. Terminal tests are in Appendix B.</p></section>
+<section id="backup" class="panel"><h2>4. Export or restore mock data</h2>
+<p>These snapshots contain mock API records, not n8n workflows or credentials. Stop running workflows before restoring.</p>
+<div class="toolbar"><button id="export">Export fresh snapshot</button><label>Snapshot file <input id="snapshotFile" type="file" accept=".json,application/json"></label><button id="restore">Restore selected snapshot</button></div>
+<p class="muted">Restore replaces all ten mock collections and is not an atomic transaction. A partial failure must be inspected before workflows resume. Reset instead starts a new exercise with new relative dates.</p></section>
+<footer>Local lab only. Open at http://localhost:3000 while the mock-api service is running.</footer>
+<script src="/app.js"></script>
+</body>
+</html>

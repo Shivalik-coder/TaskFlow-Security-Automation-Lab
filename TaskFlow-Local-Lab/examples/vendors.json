@@ -1,0 +1,74 @@
+[
+  {
+    "id": "auth0",
+    "vendor": "Auth0",
+    "pqcStatus": "testing",
+    "lastUpdated": "@days:-18",
+    "lastReviewedAt": "@days:-18",
+    "nextReview": "@days:45",
+    "lastObservedStatus": null,
+    "owner": "Identity",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-AUTH0"
+  },
+  {
+    "id": "aws",
+    "vendor": "AWS",
+    "pqcStatus": "ready",
+    "lastUpdated": "@days:-5",
+    "lastReviewedAt": "@days:-5",
+    "nextReview": "@days:25",
+    "lastObservedStatus": null,
+    "owner": "Platform",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-AWS"
+  },
+  {
+    "id": "stripe",
+    "vendor": "Stripe",
+    "pqcStatus": "unknown",
+    "lastUpdated": "@days:-45",
+    "lastReviewedAt": "@days:-45",
+    "nextReview": "@days:-1",
+    "lastObservedStatus": null,
+    "owner": "Payments",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-STRIPE"
+  },
+  {
+    "id": "sendgrid",
+    "vendor": "SendGrid",
+    "pqcStatus": "unknown",
+    "lastUpdated": "@days:-40",
+    "lastReviewedAt": "@days:-40",
+    "nextReview": "@days:-5",
+    "lastObservedStatus": null,
+    "owner": "Messaging",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-SENDGRID"
+  },
+  {
+    "id": "intercom",
+    "vendor": "Intercom",
+    "pqcStatus": "blocked",
+    "lastUpdated": "@days:-2",
+    "lastReviewedAt": "@days:-2",
+    "nextReview": "@days:10",
+    "lastObservedStatus": null,
+    "owner": "Support Systems",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-INTERCOM"
+  },
+  {
+    "id": "sentry",
+    "vendor": "Sentry",
+    "pqcStatus": "testing",
+    "lastUpdated": "@days:-3",
+    "lastReviewedAt": "@days:-3",
+    "nextReview": "@days:27",
+    "lastObservedStatus": null,
+    "owner": "DevOps",
+    "sourceType": "simulation",
+    "evidenceRef": "LAB-VENDOR-SENTRY"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "eventId": "LAB-CI-002",
+  "repository": "taskflow",
+  "pullRequest": 242,
+  "headSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "files": [
+    {
+      "path": "src/ui/title.js",
+      "content": "const title = 'TaskFlow Lab';"
+    }
+  ]
+}

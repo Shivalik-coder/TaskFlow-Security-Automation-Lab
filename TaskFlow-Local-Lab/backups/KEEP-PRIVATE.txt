@@ -1,0 +1,1 @@
+Store n8n backups here. They can contain credentials and encryption keys. Do not publish or share this directory.
