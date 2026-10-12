@@ -1,0 +1,765 @@
+{
+  "name": "LAB 01 - Crypto Asset Discovery",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        64
+      ],
+      "id": "8587a478-2dff-4781-9dec-13ae62d93c05",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/crypto-assets",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -256,
+        64
+      ],
+      "id": "8a5c6e40-64fb-4431-98fe-3758a33aa93a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        64
+      ],
+      "id": "00abd126-320a-4267-a25e-0097446034b3",
+      "name": "Split collection"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "RSA",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "eeac6aac-31ac-44fa-8c64-97aee029a9a1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Public-key RSA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8bc356ec-d50b-4c3e-ae7b-706286d90b4a",
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "ECDSA",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Public-key ECDSA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "81404f1e-549e-4d39-8950-067d4f859c6e",
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "Ed25519",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Public-key Ed25519"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4738334b-4cbe-4f57-bb57-6aea2be13469",
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "RS256",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Public-key RS256"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8bb4162e-7ee5-4f2e-a22d-16a99f7bfb3c",
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "ECDH",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Public-key ECDH"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6b8b3e29-08c1-40ec-93a6-24fb6dbfb475",
+                    "leftValue": "={{ $json.algorithm }}",
+                    "rightValue": "AES",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Symmetric/hash"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true,
+          "renameFallbackOutput": "Unknown",
+          "allMatchingOutputs": false
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -16
+      ],
+      "id": "7f76b495-5b95-410b-adc8-d83cd318c34d",
+      "name": "Classify algorithms"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "PQC assessment required"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        -512
+      ],
+      "id": "2894078f-ca46-40b3-86c5-91a28e2d040c",
+      "name": "PATCH RSA inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "PQC assessment required"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        -320
+      ],
+      "id": "58b2bdfd-985f-4e29-90d1-b4694ce6c266",
+      "name": "PATCH ECDSA inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "PQC assessment required"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        -128
+      ],
+      "id": "986bff11-46f6-4078-b7d9-87ff2e95fd96",
+      "name": "PATCH ED25519 inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "PQC assessment required"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        64
+      ],
+      "id": "1612d935-64d7-497c-ba1e-aec9b134c024",
+      "name": "PATCH RS256 inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "Unknown algorithm; investigate"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ null }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        640
+      ],
+      "id": "d526b0ea-1a17-409c-8fee-ef8c1c3b0dc3",
+      "name": "PATCH Unknown inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "Separate symmetric/hash assessment"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ null }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        464
+      ],
+      "id": "d25ac5f2-525a-46fb-9772-2c87fcd83551",
+      "name": "PATCH AES inventory"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/crypto-assets/' + $json.id }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "assessmentStatus",
+              "value": "PQC assessment required"
+            },
+            {
+              "name": "quantumRisk",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "lastSeenAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        256
+      ],
+      "id": "e0f26886-3d5f-45e9-bde3-569baf8de830",
+      "name": "PATCH ECDH inventory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "66d7WLIRzs3RQreo",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/66d7WLIRzs3RQreo",
+          "cachedResultName": "Create LAB 00 - Upsert Security Task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        864,
+        64
+      ],
+      "id": "d885a36f-c324-46a1-835f-3a6c79d9143e",
+      "name": "Call 'Create LAB 00 - Upsert Security Task'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a7dfade6-ea0f-4f0a-a800-dc4e63ddc912",
+              "name": "dedupeKey",
+              "value": "={{ 'crypto-review:' + $json.body.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e46df0cc-b3c7-4bbc-ba18-0989e1dafbdd",
+              "name": "ruleId",
+              "value": "crypto-review",
+              "type": "string"
+            },
+            {
+              "id": "b72ea52a-ba90-4303-a59a-363c8a6d6011",
+              "name": "assetId",
+              "value": "={{ $json.body.id }}",
+              "type": "string"
+            },
+            {
+              "id": "cf5a0e66-4aa8-4eab-963b-a164f1c62c9c",
+              "name": "title",
+              "value": "={{ 'Review ' + $json.body.service + ' cryptography' }}",
+              "type": "string"
+            },
+            {
+              "id": "81bfa0cd-8fb9-47dc-8eb2-50b246404f67",
+              "name": "priority",
+              "value": "MEDIUM",
+              "type": "string"
+            },
+            {
+              "id": "09f1f7ce-f8f4-44a4-a854-9542a80f3a7c",
+              "name": "owner",
+              "value": "={{ $json.body.owner }}",
+              "type": "string"
+            },
+            {
+              "id": "9ef95a9b-284c-46c8-9ce8-1b27bc8be1d0",
+              "name": "reason",
+              "value": "={{ $json.body.assessmentStatus + ' (' + $json.body.algorithm.toUpperCase() + ')' }}",
+              "type": "string"
+            },
+            {
+              "id": "6a014729-65ed-4d28-a686-0e6474b2680a",
+              "name": "observedAt",
+              "value": "={{ $json.body.lastSeenAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        640,
+        64
+      ],
+      "id": "73fc9e53-7b99-4a11-9aeb-ec0c758c0ce3",
+      "name": "Prepare Security finding"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split collection": {
+      "main": [
+        [
+          {
+            "node": "Classify algorithms",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify algorithms": {
+      "main": [
+        [
+          {
+            "node": "PATCH RSA inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH ECDSA inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH ED25519 inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH RS256 inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH ECDH inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH AES inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PATCH Unknown inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH RSA inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH ECDSA inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH ED25519 inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH RS256 inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH ECDH inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PATCH AES inventory": {
+      "main": [
+        []
+      ]
+    },
+    "PATCH Unknown inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Security finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Security finding": {
+      "main": [
+        [
+          {
+            "node": "Call 'Create LAB 00 - Upsert Security Task'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
