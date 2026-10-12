@@ -61,14 +61,22 @@ A reusable n8n workflow that validates security findings, creates or updates tas
 ### LAB 01 — Crypto Asset Discovery
 
 An automated cryptographic inventory assessment workflow built with n8n's visual nodes.
+### LAB 01 — Workflow Architecture
+
+![LAB 01 Crypto Asset Discovery Workflow](screenshots/LAB-01-Workflow-Overview.png)
+
+**Implementation:** Visual n8n workflow using HTTP Request,
+Split Out, Switch, Edit Fields, and Execute Sub-workflow nodes.
 
 **Verified Results:**
-- 8 simulated cryptographic assets retrieved and assessed.
-- 6 public-key-related assets identified for review.
+- 8 cryptographic assets assessed.
+- 6 public-key-related assets flagged for review.
 - 1 unknown-algorithm asset flagged for investigation.
-- 1 AES asset assessed separately.
-- 7 security review tasks generated.
-- No duplicate crypto-review tasks created on repeated execution.
+- 1 AES asset assessed separately without a review task.
+- 7 security review tasks created.
+- No duplicate review tasks on repeated execution.
+
+**Environment:** Fictional TaskFlow website and simulated Mockoon API.
 
 - [View LAB 01 Workflow](workflows/LAB-01-Crypto-Asset-Discovery.json)
 - [View LAB 01 Implementation and Testing](docs/LAB-01-Testing.md)
