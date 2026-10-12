@@ -101,7 +101,7 @@ Scripts for future labs are reference material and do not indicate that those la
 
 For complete installation details, refer to:
 
-[TaskFlow Starter Kit Setup Instructions](docs/Starter-Kit-Setup.md)
+For complete installation, Docker configuration, Mockoon setup, and n8n workflow instructions, refer to the [TaskFlow Security Automation Lab Guide (PDF)](docs/TaskFlow-Security-Automation-Lab-Guide.pdf).
 
 The environment is designed for local educational use only. Its development settings should not be exposed to the public internet.
 
