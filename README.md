@@ -41,6 +41,28 @@ This project demonstrates cybersecurity automation concepts and is not a product
 | LAB 01 — Seven review-task creation | Verification pending |
 | LAB 02–08 | Planned |
 
+## LAB 00 — Upsert Security Task
+
+This reusable n8n workflow automates security task creation,
+duplicate prevention, priority escalation, and simulated notifications.
+
+### Workflow Architecture
+
+![LAB 00 Workflow Overview](screenshots/LAB-00-Workflow-Overview.png)
+
+### Features
+
+- Validates incoming security findings.
+- Checks whether a matching task already exists.
+- Creates new tasks using POST.
+- Updates existing tasks using PATCH.
+- Prevents duplicate security findings.
+- Escalates task priorities when necessary.
+- Generates simulated security notifications.
+- Verifies task updates through API read-back.
+
+**Testing Status:** Completed and verified using fictional TaskFlow data.
+
 ## Project Goals
 
 - Discover and inventory simulated cryptographic assets.
