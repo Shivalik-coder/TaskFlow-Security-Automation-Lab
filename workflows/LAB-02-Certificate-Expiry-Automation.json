@@ -1,0 +1,561 @@
+{
+  "name": "LAB 02 - Certificate Expiry Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        80
+      ],
+      "id": "0338f303-0627-4fd9-afd2-5abf90a64f7f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/certificates",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -256,
+        80
+      ],
+      "id": "72185f29-4c48-42ed-95cd-16863e72e793",
+      "name": "Get certificates"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        80
+      ],
+      "id": "127c406e-f9ce-4f5e-81aa-eebd6337e04f",
+      "name": "Split certificates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "667bac17-97f0-4668-9d52-3841323831b9",
+              "leftValue": "={{ DateTime.fromISO($json.expiresAt || '').isValid && ($json.expiresAt || '').endsWith('Z') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        192,
+        80
+      ],
+      "id": "ecb16164-67e5-42ca-8f30-38a132e4d1ce",
+      "name": "Valid expiry date?"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ (DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000 }}",
+                    "rightValue": 7,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    },
+                    "id": "7c77e7b6-6d7d-47aa-982e-69fe3e5150fa"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CRITICAL"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d939db0a-6d62-438a-ade1-ad111fe87dde",
+                    "leftValue": "={{ ((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) >= 7 && ((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) < 14 }}",
+                    "rightValue": 14,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "HIGH"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "86e6d20f-707d-4105-838c-7517a9984947",
+                    "leftValue": "={{ ((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) >= 14 && ((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) < 30 }}",
+                    "rightValue": 30,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "MEDIUM"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "HEALTHY",
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -144
+      ],
+      "id": "c665763c-e76d-4a35-ba25-f9b06b95dffd",
+      "name": "Classify Certificate Expiry"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8364cef-7eca-496d-b053-38e301974edb",
+              "name": "priority",
+              "value": "CRITICAL",
+              "type": "string"
+            },
+            {
+              "id": "fa7f83b0-9a6e-4f09-b6ed-54c88320a8a7",
+              "name": "ruleId",
+              "value": "certificate-expiry",
+              "type": "string"
+            },
+            {
+              "id": "16cd3bbd-287e-432c-b5ca-26eb48a3d95e",
+              "name": "reason",
+              "value": "={{ DateTime.fromISO($json.expiresAt).toMillis() <= $now.toMillis() ? 'Certificate is expired' : 'Certificate expires in ' + Math.ceil((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) + ' displayed day(s)' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        640,
+        -304
+      ],
+      "id": "a6576b7e-0cd3-41d4-9c22-d1ce32cd70a2",
+      "name": "Mark CRITICAL certificate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1af423b-f47d-4f84-9ce2-2be6cdae343e",
+              "name": "priority",
+              "value": "HIGH",
+              "type": "string"
+            },
+            {
+              "id": "b2e1975d-2ccc-4e82-bed5-7f7cadb4790b",
+              "name": "ruleId",
+              "value": "certificate-expiry",
+              "type": "string"
+            },
+            {
+              "id": "5f4b3859-f1f9-4201-b765-17f33b7ee863",
+              "name": "reason",
+              "value": "={{ 'Certificate expires in ' + Math.ceil((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) + ' displayed day(s)' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        640,
+        -112
+      ],
+      "id": "2b631233-4ca0-443a-a455-362e12ea9b64",
+      "name": "Mark HIGH certificate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b51b4af9-c633-4940-a4df-18606ecbf272",
+              "name": "priority",
+              "value": "MEDIUM",
+              "type": "string"
+            },
+            {
+              "id": "12e743de-2286-42e1-abc1-1e7b86a30132",
+              "name": "ruleId",
+              "value": "certificate-expiry",
+              "type": "string"
+            },
+            {
+              "id": "cd4a80c3-15d7-429f-8887-e10f3570ed0e",
+              "name": "reason",
+              "value": "={{ 'Certificate expires in ' + Math.ceil((DateTime.fromISO($json.expiresAt).toMillis() - $now.toMillis()) / 86400000) + ' displayed day(s)' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        640,
+        80
+      ],
+      "id": "061bc0ac-847b-4772-b757-978ed89086c2",
+      "name": "Mark MEDIUM certificate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d22d964d-a85f-4969-9bd5-195492d50e9e",
+              "name": "priority",
+              "value": "HIGH",
+              "type": "string"
+            },
+            {
+              "id": "6f8e727c-5f15-415f-8e2d-dee85cbc7bba",
+              "name": "ruleId",
+              "value": "certificate-data-quality",
+              "type": "string"
+            },
+            {
+              "id": "a03af7cb-658d-453d-99d9-a48e73baaad9",
+              "name": "reason",
+              "value": "expiresAt is missing or is not a valid UTC ISO timestamp",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        640,
+        272
+      ],
+      "id": "8c38918c-d143-485c-aa45-b5a7e6c04c4f",
+      "name": "INVALID certificate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "497900dd-8a80-4f0d-a986-4e10eedd716c",
+              "name": "dedupeKey",
+              "value": "={{ $json.ruleId + ':' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "6bd1f8c8-7977-4cdd-9227-4c3f03dfd8a5",
+              "name": "ruleId",
+              "value": "={{ $json.ruleId }}",
+              "type": "string"
+            },
+            {
+              "id": "2b5924b6-225e-42cf-83e6-5f8b5eea6bd4",
+              "name": "assetId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "5736a6e0-09ec-43b2-8fdd-a24a28e2e162",
+              "name": "title",
+              "value": "={{ 'Review certificate: ' + $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "e7698a18-83bd-4ee3-ad47-e235e44f8f37",
+              "name": "priority",
+              "value": "={{ $json.priority }}",
+              "type": "string"
+            },
+            {
+              "id": "8553df0b-89ea-4cf9-8e00-c08c6a47ef14",
+              "name": "owner",
+              "value": "={{ $json.owner || 'Unassigned' }}",
+              "type": "string"
+            },
+            {
+              "id": "a00c46bb-29e6-4c06-8aad-81fab5ddaa83",
+              "name": "reason",
+              "value": "={{ $json.reason }}",
+              "type": "string"
+            },
+            {
+              "id": "f12a1f07-2a2d-4e12-8a9f-c641a285fedc",
+              "name": "observedAt",
+              "value": "={{ $now.toUTC().toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        864,
+        -16
+      ],
+      "id": "20f1feea-1d43-45c1-b7a0-aff5948cd8da",
+      "name": "Prepare Certificate Finding"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "66d7WLIRzs3RQreo",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/66d7WLIRzs3RQreo",
+          "cachedResultName": "Create LAB 00 - Upsert Security Task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        1088,
+        -16
+      ],
+      "id": "8e55ef62-b990-4dd6-9b0b-68c47179b348",
+      "name": "Call 'Create LAB 00 - Upsert Security Task'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get certificates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get certificates": {
+      "main": [
+        [
+          {
+            "node": "Split certificates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split certificates": {
+      "main": [
+        [
+          {
+            "node": "Valid expiry date?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid expiry date?": {
+      "main": [
+        [
+          {
+            "node": "Classify Certificate Expiry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "INVALID certificate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Certificate Expiry": {
+      "main": [
+        [
+          {
+            "node": "Mark CRITICAL certificate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark HIGH certificate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark MEDIUM certificate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark CRITICAL certificate": {
+      "main": [
+        [
+          {
+            "node": "Prepare Certificate Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark HIGH certificate": {
+      "main": [
+        [
+          {
+            "node": "Prepare Certificate Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark MEDIUM certificate": {
+      "main": [
+        [
+          {
+            "node": "Prepare Certificate Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INVALID certificate": {
+      "main": [
+        [
+          {
+            "node": "Prepare Certificate Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Certificate Finding": {
+      "main": [
+        [
+          {
+            "node": "Call 'Create LAB 00 - Upsert Security Task'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
