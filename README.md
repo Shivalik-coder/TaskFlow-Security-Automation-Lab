@@ -30,7 +30,7 @@ It covers Docker, Mockoon, n8n, cryptographic asset assessment, certificate moni
 
 The repository documents the actual implementation, testing, troubleshooting, and progress of the project.
 
-**Implementation Status:** LAB 00 and LAB 01 are completed and tested. Remaining exercises are planned or in progress.
+**Implementation Status:** LAB 00, LAB 01, and LAB 02 are completed and tested. LAB 03–08 are planned.
 
 [Read the Complete TaskFlow Security Automation Lab Guide (PDF)](docs/TaskFlow-Security-Automation-Lab-Guide.pdf)
 
@@ -73,12 +73,12 @@ The TaskFlow Local Docker and Mockoon Starter Kit provides the simulated infrast
 
 | Folder or File | Description |
 |---|---|
-| `compose.yaml` | Docker Compose configuration |
-| `mockoon/` | Fictional TaskFlow website, API configuration, and seed data |
-| `code/` | JavaScript reference scripts from the project guide |
-| `examples/` | Simulated JSON records and API request examples |
-| `events/` | Sample webhook event payloads |
-| `practice/` | Beginner Mockoon practice exercises |
+| `TaskFlow-Local-Lab/compose.yaml` | Docker Compose configuration |
+| `TaskFlow-Local-Lab/mockoon/` | Fictional TaskFlow website, API configuration, and seed data |
+| `TaskFlow-Local-Lab/code/` | JavaScript reference scripts from the project guide |
+| `TaskFlow-Local-Lab/examples/` | Simulated JSON records and API request examples |
+| `TaskFlow-Local-Lab/events/` | Sample webhook event payloads |
+| `TaskFlow-Local-Lab/practice/` | Beginner Mockoon practice exercises |
 | `workflows/` | Completed n8n workflow exports |
 | `docs/` | Project guide, setup instructions, and testing documentation |
 | `screenshots/` | Workflow screenshots and visual evidence |
@@ -89,7 +89,7 @@ Scripts for future labs are reference material and do not indicate that those la
 
 1. Install Docker Desktop and Docker Compose.
 2. Clone or download this GitHub repository.
-3. Open the repository folder in Terminal.
+3. Open Terminal and navigate into the starter-kit folder with `cd TaskFlow-Local-Lab` from the cloned repository root.
 4. Check the Docker Compose configuration using `docker compose config`.
 5. Start the local services using `docker compose up -d`.
 6. Open n8n at `http://localhost:5678`.
@@ -98,8 +98,6 @@ Scripts for future labs are reference material and do not indicate that those la
 9. Follow the project guide to configure and test the n8n workflows.
 
 **Important:** Initialize/reset replaces the mock records, so avoid using it when you need to preserve your existing test results. Follow the starter-kit instructions for saving and restoring your mock data.
-
-For complete installation details, refer to:
 
 For complete installation, Docker configuration, Mockoon setup, and n8n workflow instructions, refer to the [TaskFlow Security Automation Lab Guide (PDF)](docs/TaskFlow-Security-Automation-Lab-Guide.pdf).
 
@@ -223,11 +221,13 @@ These classification rules are designed for the sample dataset and do not consti
 
 ---
 
-## Next Milestone — LAB 02
-
 ### LAB 02 — Certificate Expiry Automation
 
 A visual n8n security automation workflow that monitors simulated certificate expiration dates and generates prioritized security findings.
+
+#### Workflow Architecture
+
+![LAB 02 Certificate Expiry Workflow](screenshots/LAB-02-Workflow-Overview.png)
 
 **Key capabilities:**
 - Detects expiring and expired certificates.
@@ -242,8 +242,28 @@ A visual n8n security automation workflow that monitors simulated certificate ex
 **Project files:**
 - [LAB 02 Workflow](workflows/LAB-02-Certificate-Expiry-Automation.json)
 - [LAB 02 Testing and Validation](docs/LAB-02-Testing.md)
+- [LAB 02 Workflow Screenshot](screenshots/LAB-02-Workflow-Overview.png)
 
 **Status:** Completed and tested using fictional local-lab data.
+
+---
+
+## Next Milestone — LAB 03
+
+### LAB 03 — JWT Key Rotation Simulator
+
+The next phase focuses on detecting signing keys that exceed their rotation policy and simulating a controlled, approval-gated JWT key lifecycle using fictional metadata.
+
+**Planned capabilities:**
+- Detect overdue JWT signing keys and flag invalid key-age data.
+- Create or update security review tasks through LAB 00.
+- Create a pending rotation request without automatically approving it.
+- Require manual approval before making any simulated key changes.
+- Stage replacement key metadata and verify readiness before signing cutover.
+- Preserve verification overlap before retiring the old key.
+- Verify the final records before closing the corresponding rotation task.
+
+**Status:** Planned — not yet implemented or tested.
 
 ---
 
