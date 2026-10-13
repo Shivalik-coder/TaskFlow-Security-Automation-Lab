@@ -121,7 +121,12 @@ The environment is designed for local educational use only. Its development sett
 | LAB 01 — Eight cryptographic asset assessments | Passed |
 | LAB 01 — Seven automated security review tasks | Passed |
 | LAB 01 — Duplicate prevention on rerun | Passed |
-| LAB 02 — Certificate Expiry Automation | Next |
+| LAB 02 — Certificate Expiry Automation | Completed and tested |
+| LAB 02 — Certificate expiry classification | Passed |
+| LAB 02 — Invalid expiry date detection | Passed |
+| LAB 02 — Priority escalation (MEDIUM to CRITICAL) | Passed |
+| LAB 02 — Certificate renewal verification | Passed |
+| LAB 02 — Verified task closure | Passed |
 | LAB 03–08 | Planned |
 
 ---
@@ -220,21 +225,25 @@ These classification rules are designed for the sample dataset and do not consti
 
 ## Next Milestone — LAB 02
 
-### Certificate Expiry Automation
+### LAB 02 — Certificate Expiry Automation
 
-The next workflow will evaluate certificate expiry dates, identify approaching or expired certificates, and create or update remediation tasks through LAB 00.
+A visual n8n security automation workflow that monitors simulated certificate expiration dates and generates prioritized security findings.
 
-**Planned Features:**
+**Key capabilities:**
+- Detects expiring and expired certificates.
+- Classifies findings as CRITICAL, HIGH, or MEDIUM.
+- Flags invalid certificate expiration dates.
+- Prevents duplicate security tasks through LAB 00.
+- Supports priority escalation when expiration becomes urgent.
+- Demonstrates certificate renewal verification and manual task closure.
 
-- Retrieve simulated certificate inventory records.
-- Evaluate certificate expiration dates.
-- Detect certificates nearing expiry.
-- Detect invalid expiry-date information.
-- Assign priorities based on the findings.
-- Generate or update security tasks.
-- Prevent duplicate remediation tasks.
+**Implementation:** n8n, Docker, Mockoon, REST API, IF, Switch, Edit Fields, and Execute Sub-workflow nodes.
 
-**Status:** Not yet implemented.
+**Project files:**
+- [LAB 02 Workflow](workflows/LAB-02-Certificate-Expiry-Automation.json)
+- [LAB 02 Testing and Validation](docs/LAB-02-Testing.md)
+
+**Status:** Completed and tested using fictional local-lab data.
 
 ---
 
