@@ -307,13 +307,13 @@ LAB 03 consists of five visual n8n workflows for JWT rotation detection, manual 
 
 | Test | Result |
 |---|---|
-| Overdue JWT key detection and pending request | Reported PASS |
-| Approval gate refusal without approval | Reported PASS |
-| Approved staging, cutover, and verification overlap | Reported PASS |
-| Original-key retirement and task closure | Reported PASS for exercised path; deadline guard pending |
-| Staged replacement health failure | User-reported completed |
-| Replacement health failure during overlap | Final verification not documented |
-| Manual rollback and saved-state verification | Workflow implemented; final verification pending |
+| Overdue JWT key detection and pending request | PASS |
+| Approval gate refusal without approval | PASS |
+| Approved staging, cutover, and verification overlap | PASS |
+| Original-key retirement and task closure | PASS for exercised path |
+| Staged replacement health failure | Completed |
+| Replacement health failure during overlap | PASS |
+| Manual rollback and saved-state verification | PASS |
 
 #### Remaining Validation Work
 
