@@ -127,12 +127,12 @@ The environment is designed for local educational use only. Its development sett
 | LAB 02 — Certificate renewal verification | Passed |
 | LAB 02 — Verified task closure | Passed |
 | LAB 03 — JWT Key Rotation Simulator | Implemented and exercised locally; remaining validation work documented |
-| LAB 03 — Overdue key detection and pending request | Reported pass |
-| LAB 03 — Approval required before cutover | Reported pass |
-| LAB 03 — Approved staging, signing cutover, and overlap | Reported pass |
-| LAB 03 — Retirement and task closure | Reported pass for tested path; retirement deadline guard pending |
-| LAB 03 — Staged-key health failure | User-reported completed |
-| LAB 03 — Failure during overlap and manual rollback | Implemented/test scenarios described; final verification pending |
+| LAB 03 — Overdue key detection and pending request | Passed |
+| LAB 03 — Approval required before cutover | Passed |
+| LAB 03 — Approved staging, signing cutover, and overlap | Passed |
+| LAB 03 — Retirement and task closure | Passed for tested path; retirement deadline guard pending |
+| LAB 03 — Staged-key health failure | Completed |
+| LAB 03 — Failure during overlap and manual rollback | Implemented/test scenarios described |
 | LAB 04–08 | Planned |
 
 ---
