@@ -1,0 +1,177 @@
+{
+  "name": "LAB - Manual JWT Rollback",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -128
+      ],
+      "id": "71856923-d812-4073-bb20-a954f32eb246",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/jwt-keys/jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "state",
+              "value": "active"
+            },
+            {
+              "name": "useForSigning",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "useForVerification",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "published",
+              "value": "={{ true }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -208,
+        -128
+      ],
+      "id": "9aa4584b-04b6-4ba2-b6fc-0ed897d378d5",
+      "name": "Restore Original JWT Key"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/jwt-keys/jwt-001-next",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "useForSigning",
+              "value": "={{ false }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        16,
+        -128
+      ],
+      "id": "1600c72e-2d17-49f6-a416-059705c37eb8",
+      "name": "Disable New JWT Signing"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/rotation-requests/rotate-jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "rolled-back"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        -128
+      ],
+      "id": "0643c145-d529-4017-9adb-30d7ae28161d",
+      "name": "Mark JWT Rotation Rolled Back"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/tasks",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dedupeKey_eq",
+              "value": "jwt-rotation:jwt-001"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        464,
+        -128
+      ],
+      "id": "8240b036-5f8d-4477-8e6a-7329357a60e0",
+      "name": "Verify JWT Rotation Task"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Restore Original JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Original JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Disable New JWT Signing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disable New JWT Signing": {
+      "main": [
+        [
+          {
+            "node": "Mark JWT Rotation Rolled Back",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark JWT Rotation Rolled Back": {
+      "main": [
+        [
+          {
+            "node": "Verify JWT Rotation Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

@@ -1,0 +1,676 @@
+{
+  "name": "LAB 03A - Detect JWT Rotation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        -736
+      ],
+      "id": "e4c4aa36-ea29-446d-8ea1-82fabe792072",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -736
+      ],
+      "id": "6cdf42a1-1a07-411a-b74b-9b77ddb97694",
+      "name": "Split JWT Keys"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4ba7a848-d667-4ad9-bf0e-3f149e0459c2",
+              "name": "dedupeKey",
+              "value": "={{ 'jwt-rotation:' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "4eee2f9a-003a-42c8-bcdc-fd32e3316f12",
+              "name": "ruleId",
+              "value": "jwt-rotation",
+              "type": "string"
+            },
+            {
+              "id": "e19d67ea-fce2-401a-8289-b5e012a745a2",
+              "name": "assetId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1b7f46b5-14b5-454e-9f92-a3911d6a4fd0",
+              "name": "title",
+              "value": "={{ 'Review signing key: ' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "52f7d404-ba01-4c3f-8510-595d3637af43",
+              "name": "priority",
+              "value": "HIGH",
+              "type": "string"
+            },
+            {
+              "id": "9d0434a1-2e39-4026-b313-0362e64e2031",
+              "name": "owner",
+              "value": "={{ $json.owner || 'Unassigned' }}",
+              "type": "string"
+            },
+            {
+              "id": "d970f5bb-2eb2-458c-ab1a-a15ce672f03f",
+              "name": "reason",
+              "value": "Signing key exceeds lab age policy",
+              "type": "string"
+            },
+            {
+              "id": "7a67929d-4fc2-4806-94f2-ab9f31ef9d7f",
+              "name": "observedAt",
+              "value": "={{ $now.toUTC().toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "73ee3d01-3452-4e2a-aefe-ca63aa7716f7",
+              "name": "requestId",
+              "value": "={{ 'rotate-' + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "b778f88b-8cf2-4bcd-8f96-29ed3bb56afb",
+              "name": "evidence.ageDays",
+              "value": "={{ $json.keyAge.milliseconds / 86400000 }}",
+              "type": "number"
+            },
+            {
+              "id": "2423d792-935b-4fd7-889c-adee56ef33d7",
+              "name": "evidence.rotationPolicyDays",
+              "value": "={{ Number($json.rotationPolicyDays) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -816,
+        -496
+      ],
+      "id": "6436dc50-5b2b-48a2-8c8b-eeb0410f2bc6",
+      "name": "Prepare JWT Rotation Finding"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Create LAB 00 - Upsert Security Task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -592,
+        -496
+      ],
+      "id": "b9df7a06-a349-4fc1-a4e7-eea35df6ef7f",
+      "name": "Create JWT Rotation Task"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/jwt-keys",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -592,
+        -736
+      ],
+      "id": "345b451c-18f3-4cc7-b353-ca050fb73533",
+      "name": "Get JWT Keys"
+    },
+    {
+      "parameters": {
+        "operation": "getTimeBetweenDates",
+        "startDate": "={{ $json.createdAt }}",
+        "endDate": "={{ $now.toISO() }}",
+        "units": [
+          "millisecond"
+        ],
+        "outputFieldName": "keyAge",
+        "options": {
+          "includeInputFields": true,
+          "isoString": false
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -736
+      ],
+      "id": "4992af57-011d-48f2-9b72-ae2d8357a239",
+      "name": "Calculate JWT Key Age"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ca0c29bb-f014-48a1-8cf2-d6e431b80f5e",
+              "leftValue": "={{ $json.ruleId }}",
+              "rightValue": "jwt-rotation",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -368,
+        -496
+      ],
+      "id": "a3ada37c-10cb-489f-9afa-90cce6b47281",
+      "name": "Is JWT Rotation Finding?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "04a3ceaf-3683-4231-b3d7-54af5238371a",
+              "leftValue": "={{ $json.useForSigning }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        -736
+      ],
+      "id": "93d82a31-4d19-4498-beaa-c55727777940",
+      "name": "Is Signing Key?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d98cbe28-5c3b-45bf-b59f-95d641d7163c",
+              "leftValue": "={{ DateTime.fromISO($json.createdAt).isValid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "71525bac-a753-440d-84dd-658b359ff20f",
+              "leftValue": "={{ DateTime.fromISO($json.createdAt).toMillis() <= $now.toMillis() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "45cea971-76d1-4e97-b0b0-25d874bf7d29",
+              "leftValue": "={{ Number.isFinite(Number($json.rotationPolicyDays)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d4a55707-77e1-436f-9663-0ad189180ae5",
+              "leftValue": "={{ Number($json.rotationPolicyDays) }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        -736
+      ],
+      "id": "141f40dd-9f3e-4a23-bd6a-8384ee2116e7",
+      "name": "Valid JWT Metadata?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0d30392d-751b-493c-9bb9-2a52b0f1602d",
+              "leftValue": "={{ $json.keyAge.milliseconds }}",
+              "rightValue": "={{ $json.rotationPolicyDays * 86400000 }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        -736
+      ],
+      "id": "65c4b6e5-4428-44f5-a528-f266a91f6334",
+      "name": "JWT Rotation Overdue?"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/rotation-requests",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id_eq",
+              "value": "rotate-jwt-001"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -112,
+        -496
+      ],
+      "id": "311911b6-790d-4c3e-b1dd-682feb0f5e5a",
+      "name": "Find JWT Rotation Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "75e25d2c-8a4d-4e19-9f95-ea1ce3b371e7",
+              "leftValue": "={{ $json.body.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        -496
+      ],
+      "id": "e9582869-506a-4781-9090-1f03b190b694",
+      "name": "Rotation Request Missing?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://mock-api:3000/rotation-requests",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "rotate-jwt-001"
+            },
+            {
+              "name": "kind",
+              "value": "jwt"
+            },
+            {
+              "name": "assetId",
+              "value": "jwt-001"
+            },
+            {
+              "name": "newKeyId",
+              "value": "jwt-001-next"
+            },
+            {
+              "name": "status",
+              "value": "pending-approval"
+            },
+            {
+              "name": "approvedBy",
+              "value": "={{ null }}"
+            },
+            {
+              "name": "approvedAt",
+              "value": "={{ null }}"
+            },
+            {
+              "name": "simulated",
+              "value": "={{ true }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        320,
+        -496
+      ],
+      "id": "1622e333-c28e-47fe-a227-9d0ad66533f9",
+      "name": "Create Pending JWT Rotation Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b0ebdd48-68a3-4bcf-b4e7-14751546ccd1",
+              "leftValue": "={{ $json.body.length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        -288
+      ],
+      "id": "481bbb9f-143f-4f5f-ab78-300fee0699ac",
+      "name": "Exactly One Request Exists?"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Unexpected rotation request count; inspect duplicate or malformed records"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -272
+      ],
+      "id": "41f53fa6-4f4d-4fd9-aa1d-0cc1ae415670",
+      "name": "Stop and Error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get JWT Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split JWT Keys": {
+      "main": [
+        [
+          {
+            "node": "Is Signing Key?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare JWT Rotation Finding": {
+      "main": [
+        [
+          {
+            "node": "Create JWT Rotation Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get JWT Keys": {
+      "main": [
+        [
+          {
+            "node": "Split JWT Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate JWT Key Age": {
+      "main": [
+        [
+          {
+            "node": "JWT Rotation Overdue?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create JWT Rotation Task": {
+      "main": [
+        [
+          {
+            "node": "Is JWT Rotation Finding?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Signing Key?": {
+      "main": [
+        [
+          {
+            "node": "Valid JWT Metadata?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid JWT Metadata?": {
+      "main": [
+        [
+          {
+            "node": "Calculate JWT Key Age",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JWT Rotation Overdue?": {
+      "main": [
+        [
+          {
+            "node": "Prepare JWT Rotation Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is JWT Rotation Finding?": {
+      "main": [
+        [
+          {
+            "node": "Find JWT Rotation Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find JWT Rotation Request": {
+      "main": [
+        [
+          {
+            "node": "Rotation Request Missing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rotation Request Missing?": {
+      "main": [
+        [
+          {
+            "node": "Create Pending JWT Rotation Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Exactly One Request Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exactly One Request Exists?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

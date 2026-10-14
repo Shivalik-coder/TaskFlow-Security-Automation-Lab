@@ -1,0 +1,707 @@
+{
+  "name": "LAB 03B - Approved JWT Cutover",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -320
+      ],
+      "id": "e43ffb90-ab01-4516-b40f-2f217fe989b7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/rotation-requests/rotate-jwt-001",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -144,
+        -320
+      ],
+      "id": "b91006ca-84b9-4cb7-a0da-b17515bf22b1",
+      "name": "Get JWT Rotation Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "eeb40003-9e38-419b-8ce4-ac1e83f02fc0",
+              "leftValue": "={{ $json.body.status }}",
+              "rightValue": "approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "3c34cbc2-436f-43bb-9d93-0c76f85c1374",
+              "leftValue": "={{ $json.body.kind }}",
+              "rightValue": "jwt",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "0051a780-676f-4385-b798-51e22e062b5b",
+              "leftValue": "={{ $json.body.assetId }}",
+              "rightValue": "jwt-001",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "7ebf9959-e449-4958-9193-056c92ccf034",
+              "leftValue": "={{ $json.body.simulated }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7cd1d556-0328-4d04-968c-5289a5282744",
+              "leftValue": "={{ Boolean($json.body?.approvedBy) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "78d6697c-77e4-4007-9203-9031aab31ce5",
+              "leftValue": "={{ $json.body.approvedAt ? DateTime.fromISO($json.body.approvedAt).isValid : false }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        -320
+      ],
+      "id": "4a4f02e9-240e-458c-ba96-747ac0906a8b",
+      "name": "Is JWT Rotation Approved?"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/jwt-keys/jwt-001",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        304,
+        -320
+      ],
+      "id": "ab416d7c-f263-4949-9881-608cdafdfbce",
+      "name": "Get Original JWT Key"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b92ffbc5-0ba6-4bfe-bf73-047e0f887d7a",
+              "leftValue": "={{ $json.body.useForSigning }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        -320
+      ],
+      "id": "1bc4757f-a987-4aff-a3a5-46829982779a",
+      "name": "Is Original Key Signing?"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/jwt-keys",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id_eq",
+              "value": "jwt-001-next"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        752,
+        -320
+      ],
+      "id": "afbf47cd-bbe5-4c11-bd07-9485e0f5ca79",
+      "name": "Find Replacement JWT Key"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "28ba8c28-5619-4db6-ada0-cc2e402a561b",
+              "leftValue": "={{ $json.body.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -368,
+        -80
+      ],
+      "id": "a4446790-10b6-49dd-854a-fccba2dfc519",
+      "name": "Replacement Key Missing?"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/rotation-requests/rotate-jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "running"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -128,
+        -64
+      ],
+      "id": "74796305-5a16-414b-9146-5cae151a1063",
+      "name": "Update Rotation Request to Running"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://mock-api:3000/jwt-keys",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "jwt-001-next"
+            },
+            {
+              "name": "keyId",
+              "value": "jwt-001-next"
+            },
+            {
+              "name": "service",
+              "value": "TaskFlow Authentication"
+            },
+            {
+              "name": "owner",
+              "value": "Identity"
+            },
+            {
+              "name": "algorithm",
+              "value": "RS256"
+            },
+            {
+              "name": "createdAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            },
+            {
+              "name": "rotationPolicyDays",
+              "value": "={{ 90 }}"
+            },
+            {
+              "name": "state",
+              "value": "staged"
+            },
+            {
+              "name": "published",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "publishedAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            },
+            {
+              "name": "useForSigning",
+              "value": "={{ false }}"
+            },
+            {
+              "name": "useForVerification",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "consumerHealth",
+              "value": "pass"
+            },
+            {
+              "name": "environment",
+              "value": "lab"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        -64
+      ],
+      "id": "fa110500-ee29-4c2c-800e-8895f4f9c573",
+      "name": "Create Staged JWT Key"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        -64
+      ],
+      "id": "b1c9a2e8-32be-4ec1-86ff-8fe48419b112",
+      "name": "Wait for JWKS Propagation"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/jwt-keys/jwt-001-next",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        528,
+        -64
+      ],
+      "id": "cbd5654d-0e0e-4697-a141-36e5f7a0f1c5",
+      "name": "Get Staged JWT Key"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "72c6a888-c31d-4cb6-bda5-9684d9dab311",
+              "leftValue": "={{ $json.body.published }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e18dc84c-0e37-40df-b9ae-da2e30bbaca6",
+              "leftValue": "={{ $json.body.useForVerification }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "52f64e24-b741-4895-a5a9-5853acdc2e03",
+              "leftValue": "={{ $json.body.consumerHealth }}",
+              "rightValue": "pass",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        752,
+        -64
+      ],
+      "id": "f07d3a36-544e-4947-8127-d23ad00dfa0e",
+      "name": "Verify Staged JWT Key"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/jwt-keys/jwt-001-next",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "state",
+              "value": "active"
+            },
+            {
+              "name": "useForSigning",
+              "value": "={{ true }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -368,
+        144
+      ],
+      "id": "a4c490b4-f717-4ec2-a6d8-55b0307d3e8e",
+      "name": "Activate New JWT Signing Key"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/jwt-keys/jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "state",
+              "value": "overlap"
+            },
+            {
+              "name": "useForSigning",
+              "value": "={{ false }}"
+            },
+            {
+              "name": "useForVerification",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "published",
+              "value": "={{ true }}"
+            },
+            {
+              "name": "signingStoppedAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            },
+            {
+              "name": "retireAfter",
+              "value": "={{ $now.plus({ seconds: 65 }).toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -144,
+        144
+      ],
+      "id": "b8c1477b-1520-4746-a503-131d2f153070",
+      "name": "Move Original JWT Key to Overlap"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/rotation-requests/rotate-jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "overlap"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        144
+      ],
+      "id": "f0d909ad-c630-43ec-a7a2-7c70f4730b3e",
+      "name": "Update Rotation Request to Overlap"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get JWT Rotation Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get JWT Rotation Request": {
+      "main": [
+        [
+          {
+            "node": "Is JWT Rotation Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is JWT Rotation Approved?": {
+      "main": [
+        [
+          {
+            "node": "Get Original JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Original JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Is Original Key Signing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Original Key Signing?": {
+      "main": [
+        [
+          {
+            "node": "Find Replacement JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Replacement JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Replacement Key Missing?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replacement Key Missing?": {
+      "main": [
+        [
+          {
+            "node": "Update Rotation Request to Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Rotation Request to Running": {
+      "main": [
+        [
+          {
+            "node": "Create Staged JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Staged JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Wait for JWKS Propagation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for JWKS Propagation": {
+      "main": [
+        [
+          {
+            "node": "Get Staged JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Staged JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Verify Staged JWT Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Staged JWT Key": {
+      "main": [
+        [
+          {
+            "node": "Activate New JWT Signing Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activate New JWT Signing Key": {
+      "main": [
+        [
+          {
+            "node": "Move Original JWT Key to Overlap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Original JWT Key to Overlap": {
+      "main": [
+        [
+          {
+            "node": "Update Rotation Request to Overlap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

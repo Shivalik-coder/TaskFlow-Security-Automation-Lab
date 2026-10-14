@@ -1,0 +1,69 @@
+{
+  "name": "LAB - Approve JWT Request",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -96
+      ],
+      "id": "bdadd94c-6ee4-44e4-9db4-0443f65dbd36",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://mock-api:3000/rotation-requests/rotate-jwt-001",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "approved"
+            },
+            {
+              "name": "approvedBy",
+              "value": "Lab Operator"
+            },
+            {
+              "name": "approvedAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -144,
+        -96
+      ],
+      "id": "34507cb4-7d9d-4a7c-b90f-96bccdfe54fa",
+      "name": "Approve JWT Rotation Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Approve JWT Rotation Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
