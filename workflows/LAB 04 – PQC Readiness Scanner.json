@@ -1,0 +1,469 @@
+{
+  "name": "LAB 04 – PQC Readiness Scanner",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -192
+      ],
+      "id": "c7343cd9-2335-422d-b66f-7320262dac11",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "http://mock-api:3000/services",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -208,
+        -192
+      ],
+      "id": "c0cf4d9c-f5c5-4ab9-891d-cd9d87632e55",
+      "name": "Get Services"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -192
+      ],
+      "id": "bc539e3e-826c-4017-8759-6c54670a5a71",
+      "name": "Split Services"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2a822d6a-547c-436e-abaa-1e4370c64212",
+              "name": "hasInventory",
+              "value": "={{ typeof $json.evidence?.inventory === 'string' && $json.evidence.inventory.trim() !== '' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "67041321-ee9f-4580-8090-a331c2a1a506",
+              "name": "hasRoadmap",
+              "value": "={{ typeof $json.evidence?.roadmap === 'string' && $json.evidence.roadmap.trim() !== '' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "bd872014-908e-412a-bd0e-ca94ca87c94f",
+              "name": "hasTestEnvironment",
+              "value": "={{ typeof $json.evidence?.testEnvironment === 'string' && $json.evidence.testEnvironment.trim() !== '' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "cc3f73c6-8671-4955-a905-d9a49fee9814",
+              "name": "hasHybridTest",
+              "value": "={{ typeof $json.evidence?.hybridTest === 'string' && $json.evidence.hybridTest.trim() !== '' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "d3cc556c-c04a-4b07-b5fa-d34dd9226bcd",
+              "name": "hasProduction",
+              "value": "={{ typeof $json.evidence?.production === 'string' && $json.evidence.production.trim() !== '' }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        -192
+      ],
+      "id": "42e77cfc-6fdc-41b4-a29b-0552851b9685",
+      "name": "Check Readiness Evidence"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "26509d0b-9abd-4117-ad74-137f4d1154c4",
+              "name": "score",
+              "value": "=\n{{ !$json.hasInventory ? 0\n : !$json.hasRoadmap ? 1\n : !$json.hasTestEnvironment ? 2\n : !$json.hasHybridTest ? 3\n : (!$json.hasProduction || $json.simulated === true) ? 4\n : 5 }}\n",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        -192
+      ],
+      "id": "a191a458-1066-4b09-9823-9dcfbfe0bde8",
+      "name": "Calculate Readiness Score"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "24914262-4522-41ba-8cf1-8203034dd051",
+              "name": "readinessStatus",
+              "value": "=\n{{ Array.isArray($json.blockers) && $json.blockers.length > 0\n  ? 'Blocked'\n  : $json.score === 5\n    ? 'Migrated'\n    : $json.score === 0\n      ? 'Unknown'\n      : $json.vendorControlled === true && $json.score < 4\n        ? 'Vendor-dependent'\n        : $json.score >= 3\n          ? 'Testing'\n          : 'Inventoried' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        624,
+        -192
+      ],
+      "id": "615c6ca0-e86e-4396-88da-437c03931758",
+      "name": "Assign Readiness Status"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4e805919-8aba-4b8e-b031-e98f79c511e2",
+              "name": "nextAction",
+              "value": "=\n{{ Array.isArray($json.blockers) && $json.blockers.length > 0\n  ? $json.blockers.join('; ')\n  : [\n      'Identify cryptographic assets, scope and owner',\n      'Document the vendor roadmap or internal migration decision',\n      'Prepare a non-production test environment',\n      'Run hybrid/PQC compatibility, performance and rollback tests',\n      'Prepare an approved production change and verification plan',\n      'No further migration stage; continue monitoring'\n    ][Number($json.score)] }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -416,
+        0
+      ],
+      "id": "4ba950e1-91d1-41e8-86df-23d7b32e609b",
+      "name": "Prepare Next PQC Action"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://mock-api:3000/services/' + encodeURIComponent($json.id) }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "score",
+              "value": "={{ Number($json.score) }}"
+            },
+            {
+              "name": "readinessStatus",
+              "value": "={{ $json.readinessStatus }}"
+            },
+            {
+              "name": "assessedAt",
+              "value": "={{ $now.toUTC().toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "0561dde9-1490-477e-abe9-d172fb0eb10a",
+      "name": "Save PQC Assessment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4ff31081-eb24-4153-93b3-3ae30999256f",
+              "leftValue": "=\n{{ Number($('Prepare Next PQC Action').item.json.score) < 5 || ($('Prepare Next PQC Action').item.json.blockers || []).length > 0 }}\n",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7039243d-81d7-4f8f-bfbf-9dd002286747",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        32,
+        0
+      ],
+      "id": "5ab2a6b1-16b1-4566-8f6d-e603c4d86182",
+      "name": "PQC Review Needed?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4357292a-0fbf-4d26-a42e-0a337c5a6e2a",
+              "name": "dedupeKey",
+              "value": "={{ 'readiness:' + $('Prepare Next PQC Action').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "29de3e18-67d5-4bac-9d4f-25f89bc721c2",
+              "name": "=ruleId",
+              "value": "readiness",
+              "type": "string"
+            },
+            {
+              "id": "589c1be7-3fe5-4f84-af79-f99f3fa12b37",
+              "name": "assetId",
+              "value": "={{ $('Prepare Next PQC Action').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1d672450-08b7-4d90-b70c-f64064ff88c1",
+              "name": "title",
+              "value": "={{ 'Plan next PQC step: ' + $('Prepare Next PQC Action').item.json.service }}",
+              "type": "string"
+            },
+            {
+              "id": "c7033c1a-dd7e-43aa-a984-3a6fc7299a6e",
+              "name": "priority",
+              "value": "MEDIUM",
+              "type": "string"
+            },
+            {
+              "id": "6fec1935-91ca-483b-8014-195df234d39d",
+              "name": "owner",
+              "value": "={{ $('Prepare Next PQC Action').item.json.owner || 'Security' }}",
+              "type": "string"
+            },
+            {
+              "id": "8883e066-1c61-4b4e-addb-b763a3286270",
+              "name": "reason",
+              "value": "={{ String($('Prepare Next PQC Action').item.json.nextAction ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "a80dc722-1b48-47a9-b12e-aa56bad27122",
+              "name": "observedAt",
+              "value": "={{ $now.toUTC().toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        304,
+        16
+      ],
+      "id": "952fdcbd-bee1-47cf-9961-d81701ab0499",
+      "name": "Prepare PQC Finding"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "66d7WLIRzs3RQreo",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/66d7WLIRzs3RQreo",
+          "cachedResultName": "Create LAB 00 - Upsert Security Task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        528,
+        16
+      ],
+      "id": "c9214f0d-8cae-4287-80ba-e48d31f1c9c1",
+      "name": "Create PQC Security Task"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Services": {
+      "main": [
+        [
+          {
+            "node": "Split Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Services": {
+      "main": [
+        [
+          {
+            "node": "Check Readiness Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Readiness Evidence": {
+      "main": [
+        [
+          {
+            "node": "Calculate Readiness Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Readiness Score": {
+      "main": [
+        [
+          {
+            "node": "Assign Readiness Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Readiness Status": {
+      "main": [
+        [
+          {
+            "node": "Prepare Next PQC Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Next PQC Action": {
+      "main": [
+        [
+          {
+            "node": "Save PQC Assessment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save PQC Assessment": {
+      "main": [
+        [
+          {
+            "node": "PQC Review Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PQC Review Needed?": {
+      "main": [
+        [
+          {
+            "node": "Prepare PQC Finding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare PQC Finding": {
+      "main": [
+        [
+          {
+            "node": "Create PQC Security Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "59f4155d-60b0-4b52-916d-0785ab27c139",
+  "meta": {
+    "instanceId": "4184ec260e9c1ad4d23e194ef280362967fb0ff0e299dd5abdbf6a106cae795c"
+  },
+  "nodeGroups": [],
+  "id": "wvvR8t4UmW4s2mXl",
+  "tags": []
+}
