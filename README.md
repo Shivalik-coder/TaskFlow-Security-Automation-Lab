@@ -389,7 +389,8 @@ The workflow evaluates the presence of fictional evidence references; it does no
 
 #### Project Files
 
-- [View LAB 04 Workflow](workflows/LAB-04-PQC-Readiness-Scanner.json)
+- 
+- [View LAB 04 Workflow](workflows/LAB%2004%20%E2%80%93%20PQC%20Readiness%20Scanner.json)
 - [View LAB 04 Implementation and Testing](docs/LAB-04-Testing.md)
 - [View LAB 04 Workflow Screenshot](screenshots/LAB-04-Workflow-Overview.png)
 
