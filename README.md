@@ -31,7 +31,7 @@ It covers Docker, Mockoon, n8n, cryptographic asset assessment, certificate moni
 
 The repository documents the actual implementation, testing, troubleshooting, and progress of the project.
 
-**Implementation Status:** LAB 00, LAB 01, and LAB 02 are completed and tested. LAB 03 is implemented and exercised locally, with remaining validation improvements documented. LAB 04–08 are planned.
+**Implementation Status:** LAB 00, LAB 01, LAB 02, and LAB 04 are completed and tested. LAB 03 is implemented and exercised locally, with remaining validation improvements documented. LAB 05–08 are planned.
 
 [Read the Complete TaskFlow Security Automation Lab Guide (PDF)](docs/TaskFlow-Security-Automation-Lab-Guide.pdf)
 
@@ -133,7 +133,13 @@ The environment is designed for local educational use only. Its development sett
 | LAB 03 — Retirement and task closure | Passed for tested path; retirement deadline guard pending |
 | LAB 03 — Staged-key health failure | Completed |
 | LAB 03 — Failure during overlap and manual rollback | Implemented/test scenarios described |
-| LAB 04–08 | Planned |
+| LAB 04 — PQC Readiness Scanner | Completed and tested |
+| LAB 04 — Initial service scores (3, 2, 1) | Passed |
+| LAB 04 — Three readiness tasks created | Passed |
+| LAB 04 — Duplicate prevention on rerun | Passed |
+| LAB 04 — Evidence progression and simulated cap | Passed |
+| LAB 04 — Missing inventory test and restoration | Passed |
+| LAB 05–08 | Planned |
 
 ---
 
@@ -337,20 +343,70 @@ LAB 03 consists of five visual n8n workflows for JWT rotation detection, manual 
 
 ---
 
-## Next Milestone — LAB 04
-
 ### LAB 04 — PQC Readiness Scanner
 
-The next phase focuses on evaluating the post-quantum cryptography readiness of simulated services using ordered migration evidence and documented blockers.
+**Status: Completed and Tested**
+
+A visual n8n security automation workflow that assesses simulated service readiness for post-quantum cryptography migration using ordered evidence references, blockers, and vendor dependency information.
+
+The workflow saves each service's readiness score and status, identifies the next missing migration action, and creates or updates security review tasks through LAB 00.
+
+#### Workflow Architecture
+
+![LAB 04 PQC Readiness Scanner Workflow](screenshots/LAB-04-Workflow-Overview.png)
+
+#### Implementation
+
+Visual n8n workflow using Manual Trigger, HTTP Request, Split Out, Edit Fields, IF, and Execute Sub-workflow nodes. Short n8n expressions handle readiness scoring and classification without standalone Code nodes.
+
+#### Verified Results
+
+- 3 fictional services assessed: TaskFlow API, Auth0, and Stripe.
+- Initial readiness scores of 3, 2, and 1 respectively.
+- 3 unique PQC readiness tasks created through LAB 00.
+- No duplicate readiness tasks created on repeated execution.
+- Adding Hybrid Test evidence increased TaskFlow API's score from 3 to 4.
+- Simulated Production evidence did not increase its score beyond 4.
+- Clearing Inventory evidence reduced the score to 0.
+- Original evidence values and readiness scores successfully restored.
+
+#### Testing Results
+
+| Test | Result |
+|---|---|
+| Service retrieval and evidence checks | PASS |
+| Initial readiness assessment (3, 2, 1) | PASS |
+| Three security review tasks created | PASS |
+| Duplicate prevention on rerun | PASS |
+| Evidence progression to score 4 | PASS |
+| Simulated score limit | PASS |
+| Missing prerequisite evidence | PASS |
+| Original service data restoration | PASS |
+
+**Environment:** Fictional TaskFlow website and simulated Mockoon API.
+
+The workflow evaluates the presence of fictional evidence references; it does not validate real PQC migrations or prove cryptographic compliance.
+
+#### Project Files
+
+- [View LAB 04 Workflow](workflows/LAB-04-PQC-Readiness-Scanner.json)
+- [View LAB 04 Implementation and Testing](docs/LAB-04-Testing.md)
+- [View LAB 04 Workflow Screenshot](screenshots/LAB-04-Workflow-Overview.png)
+
+---
+
+## Next Milestone — LAB 05
+
+### LAB 05 — Vendor PQC Monitoring
+
+The next phase focuses on monitoring the simulated PQC status of vendors, identifying outdated or changed evidence, and creating review tasks for records that need attention.
 
 **Planned capabilities:**
-- Retrieve simulated service records and inspect cryptographic scope, ownership, evidence, and blockers.
-- Assess evidence in order: inventory, roadmap, test environment, hybrid/PQC testing, and production migration.
-- Assign an evidence-based readiness stage rather than a security percentage.
-- Identify vendor dependencies and missing migration steps.
-- Save readiness assessments to the simulated service records.
-- Create next-step review tasks through the reusable LAB 00 workflow.
-- Verify the sample service stages and corresponding review tasks after a fresh initialization.
+- Retrieve simulated vendor records and classify ready, testing, unknown, and blocked statuses.
+- Distinguish source updates, successful checks, human reviews, and future review deadlines.
+- Identify vendor status changes and stale or invalid review dates.
+- Create security review tasks through LAB 00 without duplicating existing findings.
+- Record human review evidence separately from automated data retrieval.
 
 **Status:** Planned — not yet implemented or tested.
 
